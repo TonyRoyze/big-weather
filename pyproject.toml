@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "big-weather-ingestion"
+version = "0.1.0"
+description = "Reproducible Open-Meteo ingestion for geospatial weather analysis"
+requires-python = ">=3.11"
+dependencies = [
+  "pandas>=2.2,<3",
+  "pyarrow>=17,<22",
+  "requests-cache>=1.2,<2",
+  "tenacity>=9,<10",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<9", "responses>=0.25,<1", "ruff>=0.9,<1"]
+
+[project.scripts]
+big-weather = "weather_ingest.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "python/src"}
+
+[tool.setuptools.packages.find]
+where = ["python/src"]
+
+[tool.pytest.ini_options]
+testpaths = ["python/tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+

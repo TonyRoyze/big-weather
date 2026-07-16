@@ -1,0 +1,15 @@
+.DS_Store
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+*.egg-info/
+.idea/
+.vscode/
+target/
+project/target/
+project/project/
+data/raw/
+data/processed/
+data/cache/
