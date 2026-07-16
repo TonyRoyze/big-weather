@@ -1,42 +1,18 @@
-#set page(
-  paper: "a4",
-  margin: (top: 2.3cm, bottom: 2.3cm, left: 2.6cm, right: 2.6cm),
-  header: context {
-    if counter(page).get().first() > 1 {
-      set text(size: 8.5pt, fill: luma(110))
-      align(right)[DS 4004 · Big Weather · Interim Report]
-      line(length: 100%, stroke: 0.4pt + luma(190))
-    }
-  },
-  footer: context {
-    set text(size: 9pt, fill: luma(120))
-    align(center)[#counter(page).display("1")]
-  },
+#import "@preview/classy-tudelft-thesis:0.1.0": *
+
+#show: base.with(
+  title: "Geospatial Weather and Elevation Analysis",
+  name: "Vidura · Kaumindi · Thishakya",
+  rightheader: "DS 4004 · Big Weather · Interim Report",
 )
 
-#set text(font: "Times New Roman", size: 11.5pt, lang: "en")
-#set par(justify: true, leading: 0.72em, spacing: 0.78em)
-#set heading(numbering: "1.1", outlined: true)
-#show heading.where(level: 1): it => {
-  pagebreak(weak: true)
-  v(0.8em)
-  text(size: 14pt, weight: "bold", fill: rgb("#17365D"))[
-    #counter(heading).display() #h(0.45em) #it.body
-  ]
-  v(0.3em)
-}
-#show heading.where(level: 2): it => {
-  v(0.7em)
-  text(size: 11.5pt, weight: "bold")[#counter(heading).display() #h(0.4em) #it.body]
-  v(0.15em)
-}
-#show link: underline
+#show table: set text(size: 9.5pt)
 #show raw: set text(font: "Menlo", size: 8.8pt)
 
-#let blue = rgb("#17365D")
-#let pale = rgb("#EAF0F8")
-#let green = rgb("#2E7D32")
-#let amber = rgb("#B26A00")
+#let blue = luma(45)
+#let pale = luma(245)
+#let green = luma(75)
+#let amber = luma(75)
 #let status(label, colour: green) = box(
   inset: (x: 5pt, y: 2pt),
   radius: 2pt,
@@ -45,42 +21,31 @@
   text(size: 8.5pt, weight: "bold", fill: colour)[#label],
 )
 
-// Title page
 #align(center)[
-  #v(1.2cm)
-  #text(size: 13pt, weight: "bold", fill: blue)[DS 4004 Big Data Analytics]
-  #v(1.1cm)
-  #text(size: 22pt, weight: "bold", fill: blue)[Geospatial Weather and\
+  #v(2.5cm)
+  #text(size: 13pt, weight: "bold")[DS 4004 Big Data Analytics]
+  #v(1.4cm)
+  #text(size: 24pt, weight: "bold")[Geospatial Weather and\
   Elevation Analysis]
-  #v(0.45cm)
-  #text(size: 15pt, weight: "bold")[Interim Progress Report — Week 4]
-  #v(1.3cm)
-  #line(length: 65%, stroke: 1.2pt + blue)
+  #v(0.5cm)
+  #text(size: 16pt, weight: "bold")[Interim Progress Report Week 4]
+  #v(1.5cm)
+  #line(length: 65%, stroke: 1pt + luma(80))
   #v(1cm)
   #grid(
     columns: (4cm, 7cm),
-    row-gutter: 0.6em,
-    align: (right, left),
-    [*Project option*], [Option 5],
+    row-gutter: 0.7em,
+    align: (left, left),
     [*Team members*], [Vidura · Kaumindi · Thishakya],
     [*Submission date*], [16 July 2026],
-    [*Reporting period*], [Weeks 1–4],
-    [*Implementation*], [Python · Scala · Apache Spark],
+    [*Reporting period*], [Weeks 1–4]
   )
-  #v(1.6cm)
-  #box(
-    width: 78%, inset: 12pt, radius: 4pt,
-    fill: pale, stroke: 0.7pt + blue,
-  )[
-    *Milestone status* #h(0.5em) #status[ON TRACK]\
-    #v(0.35em)
-    Reproducible setup, ingestion pipeline, Spark transformations,
-    automated tests, and documentation are implemented.
-  ]
 ]
 
-#pagebreak()
-#outline(title: [Contents], depth: 2, indent: auto)
+#outline(depth: 1)
+
+#set page(numbering: "1")
+#counter(page).update(1)
 
 = Executive Summary
 
@@ -115,17 +80,17 @@ The primary questions are:
 
 The study period remains 1 January 2019 to 31 December 2024. This is six complete calendar years; the proposal described it as five years, so the implementation and this report correct that counting error while retaining the proposed dates.
 
-= Work Completed Through Week 4
+= Work Completed
 
-== Week 1 — Reproducible Setup
+== Week 1 Reproducible Setup #status[COMPLETE]
 
-#status[COMPLETE] #h(0.6em) A conventional project structure and pinned dependency ranges have been added. Python installation uses a local virtual environment and an installable package. The Spark application uses sbt with Scala 2.13 and Apache Spark 4.0.1. Common commands are exposed through a `Makefile`, and generated data, caches, secrets, and build outputs are excluded from version control.
+ #h(0.6em) A conventional project structure and pinned dependency ranges have been added. Python installation uses a local virtual environment and an installable package. The Spark application uses sbt with Scala 2.13 and Apache Spark 4.0.1. Common commands are exposed through a `Makefile`, and generated data, caches, secrets, and build outputs are excluded from version control.
 
 The project documentation defines prerequisites, commands, storage layout, units, attribution, and the boundary between the Week 4 milestone and later dashboard work.
 
-== Weeks 2–3 — Data Ingestion
+== Weeks 2–3 Data Ingestion #status[COMPLETE]
 
-#status[COMPLETE] #h(0.6em) The ingestion layer implements the three historical-data endpoints described in the proposal:
+ #h(0.6em) The ingestion layer implements the three historical-data endpoints described in the proposal:
 
 - The Geocoding API resolves each configured place and filters results by country code.
 - The Elevation API retrieves Copernicus DEM GLO-90 terrain height for the resolved coordinates.
@@ -133,11 +98,13 @@ The project documentation defines prerequisites, commands, storage layout, units
 
 Requests are cached locally, throttled after uncached responses, and retried up to five times with exponential back-off for transient failures. Historical calls explicitly select ERA5 so changes between model families do not introduce artificial time-series discontinuities and all four proposed weather variables remain available. Output is standardised to UTC, degrees Celsius, millimetres, metres per second, and percent.
 
-Thirty-six target locations are configured across South Asia, East and Southeast Asia, Europe, Africa, North and South America, and Oceania. A live resolution audit confirmed all 36 locations and an elevation range of 4–4,410 m: 11 lowland, 4 midland, 9 highland, and 12 alpine sites. Locations are written once as metadata; hourly observations are written in a partition layout of `location_id=<id>/year=<year>`. This creates 216 independently recoverable partitions for the full study (36 locations × 6 years).
+Thirty-six target locations are configured across South Asia, East and Southeast Asia, Europe, Africa, North and South America, and Oceania. A live resolution audit confirmed all 36 locations and an elevation range of 4, 4,410 m: 11 lowland, 4 midland, 9 highland, and 12 alpine sites. Locations are written once as metadata; hourly observations are written in a partition layout of `location_id=<id>/year=<year>`. This creates 216 independently recoverable partitions for the full study (36 locations × 6 years).
 
-== Weeks 3–4 — Spark Development
+#pagebreak()
 
-#status[COMPLETE] #h(0.6em) The Scala/Spark job now performs the transformations committed to in the proposal:
+== Weeks 3–4 Spark Development #status[COMPLETE]
+
+ #h(0.6em) The Scala/Spark job now performs the transformations committed to in the proposal:
 
 1. Reads self-describing Parquet data and checks the required schema.
 2. Rejects null keys, duplicate location–time records, and physically impossible values.
@@ -152,33 +119,33 @@ Thirty-six target locations are configured across South Asia, East and Southeast
 
 = System Design
 
-#figure(
-  box(width: 100%, inset: 12pt, fill: luma(248), stroke: 0.6pt + luma(170))[
-    #set align(center)
-    #grid(
-      columns: (1fr, 0.28fr, 1.15fr, 0.28fr, 1.15fr),
-      align: center + horizon,
-      column-gutter: 5pt,
-      box(inset: 8pt, radius: 3pt, fill: pale, stroke: blue)[*Open-Meteo*\Geocoding · Elevation\ERA5 hourly],
-      text(size: 18pt, fill: blue)[→],
-      box(inset: 8pt, radius: 3pt, fill: pale, stroke: blue)[*Python ingestion*\Cache · retry · validate\year partitions],
-      text(size: 18pt, fill: blue)[→],
-      box(inset: 8pt, radius: 3pt, fill: pale, stroke: blue)[*Raw Parquet*\locations\hourly weather],
-    )
-    #v(0.5em)
-    #text(size: 18pt, fill: blue)[↓]
-    #v(0.5em)
-    #grid(
-      columns: (1.35fr, 0.28fr, 1.35fr), align: center + horizon, column-gutter: 7pt,
-      box(inset: 8pt, radius: 3pt, fill: pale, stroke: blue)[*Processed Parquet*\enriched · daily · yearly\summaries · lapse rates],
-      text(size: 18pt, fill: blue)[←],
-      box(inset: 8pt, radius: 3pt, fill: pale, stroke: blue)[*Scala + Spark*\join · windows · aggregate\ML regression],
-    )
-  ],
-  caption: [Implemented data flow through the Week 4 milestone.],
-)
+// #figure(
+//   box(width: 100%, inset: 12pt, fill: luma(248), stroke: 0.6pt + luma(170))[
+//     #set align(center)
+//     #grid(
+//       columns: (1fr, 0.28fr, 1.15fr, 0.28fr, 1.15fr),
+//       align: center + horizon,
+//       column-gutter: 5pt,
+//       box(inset: 8pt, radius: 3pt, fill: pale, stroke: blue)[*Open-Meteo*\Geocoding · Elevation\ERA5 hourly],
+//       text(size: 18pt, fill: blue)[→],
+//       box(inset: 8pt, radius: 3pt, fill: pale, stroke: blue)[*Python ingestion*\Cache · retry · validate\year partitions],
+//       text(size: 18pt, fill: blue)[→],
+//       box(inset: 8pt, radius: 3pt, fill: pale, stroke: blue)[*Raw Parquet*\locations\hourly weather],
+//     )
+//     #v(0.5em)
+//     #text(size: 18pt, fill: blue)[↓]
+//     #v(0.5em)
+//     #grid(
+//       columns: (1.35fr, 0.28fr, 1.35fr), align: center + horizon, column-gutter: 7pt,
+//       box(inset: 8pt, radius: 3pt, fill: pale, stroke: blue)[*Processed Parquet*\enriched · daily · yearly\summaries · lapse rates],
+//       text(size: 18pt, fill: blue)[←],
+//       box(inset: 8pt, radius: 3pt, fill: pale, stroke: blue)[*Scala + Spark*\join · windows · aggregate\ML regression],
+//     )
+//   ],
+//   caption: [Implemented data flow through the Week 4 milestone.],
+// )
 
-The separation between raw and processed zones preserves source observations while allowing transformations to be rerun. Location and year partitions make failures recoverable without repeating the full extraction. Parquet is used throughout because it preserves types, supports column pruning, and is read and written natively by Spark.
+// The separation between raw and processed zones preserves source observations while allowing transformations to be rerun. Location and year partitions make failures recoverable without repeating the full extraction. Parquet is used throughout because it preserves types, supports column pruning, and is read and written natively by Spark.
 
 == Core Data Schema
 
@@ -268,6 +235,6 @@ make interim
 
 The full proposed data range is collected separately with `make ingest-all`. API responses and generated datasets remain outside version control, while configuration, code, tests, and build definitions are versioned.
 
-= Data Attribution
+// = Data Attribution
 
-Weather and geocoding data are provided by Open-Meteo. Historical analysis uses ERA5 reanalysis. Elevation is supplied through Open-Meteo from the Copernicus DEM 2021 GLO-90 dataset. The final dashboard and report will retain these attributions and add the required upstream citations.
+// Weather and geocoding data are provided by Open-Meteo. Historical analysis uses ERA5 reanalysis. Elevation is supplied through Open-Meteo from the Copernicus DEM 2021 GLO-90 dataset. The final dashboard and report will retain these attributions and add the required upstream citations.
