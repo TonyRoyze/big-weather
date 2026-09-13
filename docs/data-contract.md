@@ -45,7 +45,7 @@ claim that tropical climates have temperate seasonality.
 
 ## Quality and denominators
 
-Scala filters missing identifiers/timestamps and missing or invalid required weather
+PySpark filters missing identifiers/timestamps and missing or invalid required weather
 values, rejects non-finite precipitation/wind and drops duplicate hourly keys. It
 joins locations, records counts before/after validation and joining, and reports
 actual input/shuffle partitions. Rejection counts combine invalid rows and duplicates;
@@ -88,5 +88,5 @@ results load sorted by grouping keys. User-selected result columns and arbitrary
 sorting are future additions. Count is the number of non-null values in that metric.
 
 Example: [seasonal-temperature.json](../examples/jobs/seasonal-temperature.json).
-PySpark is pinned to the Scala job's Spark 4.0.1 runtime. Official installation
+PySpark is pinned to Spark 4.0.1 for processing and custom analysis jobs. Official installation
 reference: https://spark.apache.org/docs/4.0.1/api/python/getting_started/install.html.

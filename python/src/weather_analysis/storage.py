@@ -102,7 +102,7 @@ def atomic_json(path: Path, value: dict) -> None:
 
 
 def publish(data_root: Path, store_root: Path, version: str) -> dict:
-    """Snapshot completed Scala outputs, validate key integrity, then activate.
+    """Snapshot completed PySpark outputs, validate key integrity, then activate.
 
     Run only after ingestion/processing finish. Existing versions are never replaced.
     Hash every copied Parquet file so manifests identify actual data, not just labels.

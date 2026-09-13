@@ -7,9 +7,6 @@ __pycache__/
 *.egg-info/
 .idea/
 .vscode/
-target/
-project/target/
-project/project/
 data/raw/
 data/processed/
 data/cache/
@@ -17,3 +14,5 @@ data/platform/
 data/sample/
 data/benchmarks/
 data/bundles/
+dist/
+installer/windows/payload.tar.gz

@@ -2,7 +2,7 @@
 
 ## Implementation handoff
 
-The core local platform is now implemented: immutable Parquet releases, Scala
+The core local platform is now implemented: immutable Parquet releases, PySpark
 quality/runtime metrics, validated PySpark custom jobs, SQLite history and TTL cache,
 a runnable Streamlit starter and reproducible evidence exports. Start with
 [the team handoff](team-handoff.md). The work packages below retain the broader
@@ -22,9 +22,9 @@ The repository currently contains:
 
 - Open-Meteo ingestion with cached API responses.
 - Location, elevation and weather data handling in Python.
-- A Scala/Apache Spark processing application.
+- A PySpark processing application.
 - Enriched weather data and analytical outputs organized as Parquet datasets.
-- Python and Scala tests.
+- Python tests.
 
 The implemented extensions are the Streamlit starter, cache-aware custom analysis
 jobs and evidence exports. Optional Kafka ingestion and final team findings remain

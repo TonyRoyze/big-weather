@@ -1,10 +1,10 @@
-# Verified handoff baseline — pending team interpretation
+# Verified PySpark handoff baseline — pending team interpretation
 
-Dataset: `historical-2019-2024-v2`. Fingerprint: `0dfa1e1c39c0b8e7ba065903cac67d7da5f4a95eef19c8ea60d9bf6e657f54f6`.
+Dataset: `historical-2019-2024-pyspark-v1`. Fingerprint: `a8662d8e39b537950b6013ae4d16ccc7f3bcdd890bb6d18cfe9f8932c7177898`.
 
 Coverage: {"start": "2019-01-01T00:00:00+00:00", "end": "2024-12-31T23:00:00+00:00"}. Open-Meteo; ERA5 (Copernicus/ECMWF); elevation: Copernicus DEM GLO-90 (2021).
 
-Generated with `weather-analysis evidence`. Tables are newly exported from the published Scala outputs, not custom-job cache results. See metadata.json for full provenance.
+Generated with `weather-analysis evidence`. Tables are newly exported from the published PySpark outputs, not custom-job cache results. See metadata.json for full provenance.
 
 ## Elevation Comparison
 
@@ -63,25 +63,22 @@ Locations are selected, not a random global sample. Latitude, region and season 
 
 For each claim, record owner, question, evidence file/job ID, filters, denominator, effect size, visualization and limitations. Do not treat this generated table as a causal finding.
 
-## Processing verification
+## PySpark verification
 
-Measured locally on 2026-09-13. Scala tests: 3 passed. Python suite: 16 passed, including real Spark integration and Streamlit AppTest. The publication/schema changes were also checked with 15 non-integration tests.
+All 20 Python tests passed, including transformation tests, real Spark custom-job integration and Streamlit AppTest. The full pipeline was run with `make process`, then published using `make publish`.
 
 - Input and enriched rows: 1,893,888.
+- Daily rows: 78,912.
 - Rejected/duplicate rows: 0; unmatched location rows: 0.
-- Missing hours across all 36 locations: 0. Each daily record contains 24 observed hours.
-- Full processing duration: 35.600 seconds using local[4] and four input partitions. This is a single run, not a performance guarantee.
+- Missing hourly observations across the study window: 0.
+- Pipeline: pyspark, pipeline-v1, local[4].
+- Full processing time: 46.852s (single local run; not a performance guarantee).
 
-The seasonal-temperature example used all 1,893,888 hourly records and returned 16 band/season groups.
-
-- Job `8a1fe34f58f9433b8aa431b365b79584`: new computation, 13.641242s service duration.
-- Job `d5440c2215ad4d7ea4fe23d7db5837d1`: cache hit, 0.001137s service duration.
-
-Cache timing excludes result loading/download and chart rendering; the miss includes worker startup.
+All five output tables were independently compared with the previous published release (`historical-2019-2024-v2`) after sorting by their keys. Schemas, row counts and values matched within 1e-8 numeric tolerance, including all 1,893,888 enriched hourly rows.
 
 ## Environment
 
-Python 3.11.15; macOS-26.6.2-arm64-arm-64bit.
+Python 3.11.15; macOS-26.6.2-arm64-arm-64bit; Java 21.0.11.
 
 - pandas: 2.3.3
 - pyarrow: 21.0.0
@@ -89,16 +86,6 @@ Python 3.11.15; macOS-26.6.2-arm64-arm-64bit.
 - streamlit: 1.63.0
 - plotly: 6.9.0
 
-Java 21.0.11; Scala 2.13.16; Spark 4.0.1. The initial machine is an Apple Silicon Mac; teammates should record their own hardware for comparative benchmarks.
+The processing implementation is entirely Python/PySpark. Run `scripts/benchmark.py` using the current commands in the team handoff to collect repeated performance evidence; old timings must not be presented as measurements of this implementation.
 
-Regenerate tables and complete metadata with `make evidence`; the canonical files are in `data/platform/evidence/historical-2019-2024-v2/`. This checked-in summary lets teammates inspect the starting evidence before obtaining the larger data bundle.
-
-## Parallelism command smoke test
-
-One trial each: local[1] 43.372s; local[4] 37.387s. Input/output row counts matched. Daily, yearly, seasonal-summary and lapse-rate outputs were independently compared within 1e-8 numeric tolerance. Logs and JSON are under `data/benchmarks/handoff-smoke/`.
-
-This verifies the benchmark workflow, not a statistically reliable speedup. Run the documented three-or-more repetitions on an otherwise idle machine for the report.
-
-## Full-data application verification
-
-All five dashboard pages ran successfully in Streamlit AppTest against the published full dataset. Submitting the default custom analysis processed 1,893,888 hourly rows; repeating it returned a cache hit. The local server health endpoint returned `ok`. Browser layout review remains a dashboard-team task.
+Regenerate the complete tables and provenance with `make evidence`; files are under `data/platform/evidence/historical-2019-2024-pyspark-v1/`. Final team findings and interpretation remain to be completed.

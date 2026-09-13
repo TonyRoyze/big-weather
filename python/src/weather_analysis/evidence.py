@@ -71,7 +71,7 @@ def export_evidence(store: DatasetStore, output: Path) -> Path:
         f"Dataset: `{store.version}`. Fingerprint: `{store.manifest['fingerprint']}`.",
         f"Coverage: {json.dumps(store.manifest['coverage'])}. {store.manifest['attribution']}",
         "Generated with `weather-analysis evidence`. Tables are newly exported from the published "
-        "Scala outputs, not custom-job cache results. See metadata.json for full provenance.",
+        "PySpark outputs, not custom-job cache results. See metadata.json for full provenance.",
     ]
     for name in ["elevation_comparison", "seasonal_lapse_rates", "wettest_location_days"]:
         sections.extend(

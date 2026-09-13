@@ -1,8 +1,8 @@
 """Compare local[1] and local[4] on identical raw inputs, preserving each run.
 
 Run after installation from the repository root. No ingestion or publication occurs.
-Times include Spark startup and validation but exclude sbt startup/compilation;
-wall_seconds includes those costs. Alternate order across repetitions.
+Pipeline times include Spark startup and validation; wall_seconds additionally
+includes Python module imports and worker shutdown. Alternate order across repetitions.
 """
 
 import argparse
@@ -12,6 +12,7 @@ from pathlib import Path
 import statistics
 import subprocess
 import time
+import sys
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--input", type=Path, default=Path("data/raw"))
@@ -25,16 +26,20 @@ results = []
 for trial in range(1, args.repeats + 1):
     for threads in [1, 4] if trial % 2 else [4, 1]:
         target = args.output / f"local-{threads}-trial-{trial}"
-        # sbt runMain handles quoted paths; subprocess bypasses shell interpretation.
-        command = (
-            "runMain lk.ac.ds4004.weather.WeatherJob "
-            f"--input {json.dumps(str(args.input.resolve()))} "
-            f"--output {json.dumps(str(target.resolve()))}"
-        )
+        command = [
+            sys.executable,
+            "-m",
+            "weather_analysis.cli",
+            "process",
+            "--input",
+            str(args.input.resolve()),
+            "--output",
+            str(target.resolve()),
+        ]
         started = time.perf_counter()
         with (args.output / f"local-{threads}-trial-{trial}.log").open("w") as log:
             subprocess.run(
-                ["sbt", command],
+                command,
                 check=True,
                 stdout=log,
                 stderr=subprocess.STDOUT,

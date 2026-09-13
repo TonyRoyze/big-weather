@@ -4,10 +4,17 @@ The shared foundation is implemented. Teammates can now extend a runnable dashbo
 and develop findings against named, stable datasets. The final report and slides
 remain team deliverables; the repository provides evidence exports and writing outlines.
 
+## Windows one-file setup
+
+Use `dist/BigWeather-Setup.exe` to install the project and dependencies through WSL.
+It includes the published dataset and creates desktop launchers. Follow
+[the Windows setup guide](windows-setup.md), including its first-machine validation
+notes. The commands below are for a manual macOS/Linux or prepared WSL setup.
+
 ## Start here
 
-Use Python 3.11 and Java 17 or 21. Scala processing also needs sbt. On macOS/Linux,
-run from the repository root:
+Use Python 3.11 and Java 17 or 21. PySpark includes the Spark runtime; Java is still
+required. On macOS/Linux, run from the repository root:
 
 ```bash
 make install-team
@@ -15,14 +22,14 @@ make install-team
 # On a fresh machine without a shared snapshot:
 make ingest-all
 make process
-make publish VERSION=historical-2019-2024-v2
+make publish VERSION=historical-2019-2024-pyspark-v1
 make dashboard
 ```
 
 If a teammate supplies a published snapshot, extract it at the repository root,
-then run `make install-team` and `make dashboard`; no API download or Scala rebuild
+then run `make install-team` and `make dashboard`; no API download or processing run
 is needed for dashboard work. Python dependencies include PySpark (~434 MB package)
-for custom jobs. For charts only, `pip install -e '.[dashboard,dev]'` is sufficient.
+for processing and custom jobs. For charts only, `pip install -e '.[dashboard,dev]'` is sufficient.
 
 Published versions cannot be overwritten. If a version already exists, skip
 publication or choose a new version after a changed processing run. The dashboard
@@ -53,7 +60,7 @@ root. The fixed historical dataset does not need daily refreshes.
 | Workstream | Ready now | Team work remaining | Completion evidence |
 | --- | --- | --- | --- |
 | Ingestion/storage | Cached ERA5 extraction, isolated samples, validated versioned snapshots | Review location resolution and upstream citations | Commands, manifest, 36-location coverage, units |
-| Analysis platform | Scala transformations, quality/runtime counts, safe PySpark jobs, SQLite history and TTL cache | Run repeated performance experiment; review model assumptions | Saved specs, job IDs, benchmark logs |
+| Analysis platform | PySpark transformations, quality/runtime counts, safe PySpark jobs, SQLite history and TTL cache | Run repeated performance experiment; review model assumptions | Saved specs, job IDs, benchmark logs |
 | Dashboard | Overview/map, date/location/band/season filters, three chart views, custom jobs, history, pipeline evidence, downloads | Assign chart owners; improve layout and narrative; add annual anomalies/lapse-rate views | Screenshots and tested walkthrough of team findings |
 | Findings/report | Five evidence tables with metadata; report outline | Own questions, test alternatives, write findings and limitations | Each claim links to version + table/job + chart |
 | Presentation | Architecture and slide-by-slide outline | Select strongest results, export legible figures, rehearse | Final deck and reliable local demo |
@@ -115,7 +122,7 @@ make evidence
 .venv/bin/python scripts/benchmark.py --output data/benchmarks/comparison-01 --repeats 3
 ```
 
-The benchmark runs the full Scala job on identical raw inputs with `local[1]` and
+The benchmark runs the full PySpark job on identical raw inputs with `local[1]` and
 `local[4]`, alternates order and preserves logs and metrics. Run it on an otherwise
 idle machine. Four threads are local task parallelism, not a four-node cluster.
 Compare repeated medians; do not promise a speedup. The UI on port 4040 exists only
@@ -134,24 +141,23 @@ the chosen version). Generated datasets and bundles stay outside Git:
 
 ```bash
 mkdir -p data/bundles
-tar -czf data/bundles/historical-v2.tar.gz \
+tar -czf data/bundles/historical-pyspark-v1.tar.gz \
   data/platform/active.json \
-  data/platform/releases/historical-2019-2024-v2 \
-  data/platform/evidence/historical-2019-2024-v2
+  data/platform/releases/historical-2019-2024-pyspark-v1 \
+  data/platform/evidence/historical-2019-2024-pyspark-v1
 ```
 
 Make sure `active.json` names the bundled version. Teammates extract at the repo
 root with `tar -xzf <bundle>`. Do not overwrite an existing store with a different
 release of the same name. Release manifests record SHA-256 checksums of every
 Parquet file; preserve them. The bundle does not include raw API cache or raw
-hourly inputs; reproduce ingestion separately for ingestion/Scala development.
+hourly inputs; reproduce ingestion separately for ingestion/PySpark development.
 
 ## Verification and remaining scope
 
 ```bash
 make lint
 make test-python          # real Spark integration when analysis extra is installed
-make test-scala
 ```
 
 Tests cover schema/key publication rejection, immutable snapshots, specification

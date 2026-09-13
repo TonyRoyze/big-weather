@@ -6,7 +6,7 @@ Do not submit unchanged. Assign an owner and reference an evidence version for e
 ## 1. Abstract
 
 After completing the analysis, summarize the question, selected global locations,
-2019–2024 ERA5 data, Scala/PySpark method and two defensible numerical findings.
+2019–2024 ERA5 data, PySpark method and two defensible numerical findings.
 Avoid claims of global representativeness or causality.
 
 ## 2. Questions and scope
@@ -28,7 +28,7 @@ metrics and the pooled seasonal OLS model. Explain why totals need denominators.
 ## 4. System architecture and implementation
 
 Insert the architecture from [the project plan](project-plan.md). Describe ingestion,
-raw Parquet, Scala transforms, immutable releases, Streamlit, the validated PySpark
+raw Parquet, PySpark transforms, immutable releases, Streamlit, the validated PySpark
 worker, SQLite job history and the 24-hour result cache. Include one saved job JSON
 and its output schema. Distinguish the synchronous local worker from a distributed queue.
 

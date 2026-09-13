@@ -275,7 +275,7 @@ def history(service):
 def pipeline(store, service):
     st.header("Pipeline evidence")
     st.write(
-        "Historical ingestion → raw Parquet → Scala Spark → published Parquet → dashboard / PySpark jobs → SQLite history"
+        "Historical ingestion → raw Parquet → PySpark → published Parquet → dashboard / PySpark jobs → SQLite history"
     )
     metrics = store.manifest.get("pipeline")
     if metrics:

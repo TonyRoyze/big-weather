@@ -13,6 +13,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path("data/platform"))
     sub = parser.add_subparsers(dest="command", required=True)
+    processing = sub.add_parser("process", help="Process raw weather with local PySpark")
+    processing.add_argument("--input", type=Path, default=Path("data/raw"))
+    processing.add_argument("--output", type=Path, default=Path("data/processed"))
     publication = sub.add_parser("publish")
     publication.add_argument("--data-root", type=Path, default=Path("data"))
     publication.add_argument("--version", required=True)
@@ -26,7 +29,11 @@ def main():
     evidence.add_argument("--version")
     evidence.add_argument("--output", type=Path)
     args = parser.parse_args()
-    if args.command == "publish":
+    if args.command == "process":
+        from .pipeline import process
+
+        print(json.dumps(process(args.input, args.output), indent=2))
+    elif args.command == "publish":
         print(json.dumps(publish(args.data_root, args.root, args.version), indent=2))
     elif args.command == "overview":
         print(json.dumps(DatasetStore(args.root).get_overview(), indent=2))
