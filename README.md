@@ -99,6 +99,8 @@ current forecasts and optional Kafka are not implemented in the current local pl
 - [Data/API contract and analysis limitations](docs/data-contract.md)
 - [Dashboard guide](docs/streamlit-dashboard.md)
 - [Exploratory analysis plan](docs/exploratory-analysis.md)
+- [Contributor instructions](docs/contributor-instructions.md)
+- [Dashboard implementation notes](docs/dashboard-implementation.md)
 - [Verified evidence baseline](docs/evidence-baseline.md)
 - [Final report outline](docs/final-report-outline.md)
 - [Presentation outline and demo script](docs/presentation-outline.md)

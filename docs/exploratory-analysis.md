@@ -88,13 +88,17 @@ unless a suitable causal design is introduced.
 
 ## Reproducible workflow
 
-1. Start from a named processed Parquet dataset.
-2. Define the analytical question and expected output.
-3. Submit the equivalent custom job specification or Spark transformation.
-4. Validate row counts, nulls, units and date coverage.
-5. Save the result and the job metadata.
-6. Build the Streamlit visualization from the saved result.
-7. Record the finding, limitations and evidence in the final report.
+1. Read `docs/contributor-instructions.md` before starting.
+2. Create the notebook under `notebooks/exploratory/` using a numbered,
+   descriptive filename.
+3. Start from a named processed Parquet dataset.
+4. Define the analytical question and expected output.
+5. Submit the equivalent custom job specification or Spark transformation.
+6. Validate row counts, nulls, units and date coverage.
+7. Save the result and job metadata when it is needed by the dashboard.
+8. Build the Streamlit visualization from the saved result.
+9. Create or update `docs/analysis/<notebook-name>.md`.
+10. Record the finding, limitations and evidence in the final report.
 
 ## Team result template
 

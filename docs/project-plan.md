@@ -56,6 +56,12 @@ not implemented.
 
 ## Work packages
 
+All models and teammates must follow
+[the contributor instructions](contributor-instructions.md). Exploratory
+notebooks belong in `notebooks/exploratory/`, dashboard code belongs in
+`dashboard/`, and each completed analysis or dashboard change must leave a
+corresponding note under `docs/`.
+
 ### 1. Data ingestion and storage
 
 - Keep the existing Open-Meteo historical ingestion as the reproducible batch
