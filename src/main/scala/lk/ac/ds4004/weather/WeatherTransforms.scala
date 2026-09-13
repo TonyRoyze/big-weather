@@ -26,8 +26,8 @@ object WeatherTransforms {
     weather
       .filter(col("location_id").isNotNull && col("timestamp").isNotNull)
       .filter(col("temperature_2m").between(-100.0, 70.0))
-      .filter(col("precipitation") >= 0.0)
-      .filter(col("wind_speed_10m") >= 0.0)
+      .filter(col("precipitation").between(0.0, Double.MaxValue))
+      .filter(col("wind_speed_10m").between(0.0, Double.MaxValue))
       .filter(col("relative_humidity_2m").between(0.0, 100.0))
       .dropDuplicates("location_id", "timestamp")
   }
@@ -78,7 +78,8 @@ object WeatherTransforms {
     ).agg(
       avg("temperature_2m").as("daily_avg_temperature_c"),
       sum("precipitation").as("daily_precipitation_mm"),
-      avg("wind_speed_10m").as("daily_avg_wind_speed_ms")
+      avg("wind_speed_10m").as("daily_avg_wind_speed_ms"),
+      count(lit(1)).as("observed_hours")
     )
     val rollingWindow = Window.partitionBy("location_id")
       .orderBy(unix_date(col("date"))).rangeBetween(-29, 0)
@@ -130,4 +131,3 @@ object WeatherTransforms {
     )
   }
 }
-

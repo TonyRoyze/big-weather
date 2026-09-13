@@ -13,3 +13,7 @@ project/project/
 data/raw/
 data/processed/
 data/cache/
+data/platform/
+data/sample/
+data/benchmarks/
+data/bundles/

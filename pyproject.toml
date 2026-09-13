@@ -16,9 +16,12 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<9", "responses>=0.25,<1", "ruff>=0.9,<1"]
+dashboard = ["streamlit>=1.45,<2", "plotly>=6,<7"]
+analysis = ["pyspark==4.0.1"]
 
 [project.scripts]
 big-weather = "weather_ingest.cli:main"
+weather-analysis = "weather_analysis.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "python/src"}
@@ -28,8 +31,8 @@ where = ["python/src"]
 
 [tool.pytest.ini_options]
 testpaths = ["python/tests"]
+markers = ["integration: starts real local Spark subprocesses (requires analysis extra and Java)"]
 
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-

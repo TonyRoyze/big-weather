@@ -40,7 +40,9 @@ class WeatherTransformsSpec extends AnyFunSuite with BeforeAndAfterAll {
     val rows = Seq(
       ("a", now, 20.0, 0.0, 2.0, 60.0, 2024, now),
       ("a", now, 20.0, 0.0, 2.0, 60.0, 2024, now),
-      ("b", now, 200.0, 0.0, 2.0, 60.0, 2024, now)
+      ("b", now, 200.0, 0.0, 2.0, 60.0, 2024, now),
+      ("c", now, 20.0, Double.NaN, 2.0, 60.0, 2024, now),
+      ("d", now, 20.0, 0.0, Double.PositiveInfinity, 60.0, 2024, now)
     ).toDF(WeatherTransforms.WeatherSchema.fieldNames: _*)
     assert(WeatherTransforms.validate(rows).count() === 1)
   }

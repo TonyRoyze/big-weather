@@ -1,0 +1,7 @@
+{
+  "name": "Seasonal temperature by elevation band",
+  "source": "enriched_weather",
+  "filters": {},
+  "group_by": ["elevation_band", "season"],
+  "aggregations": {"temperature_2m": ["avg", "min", "max", "count"]}
+}
