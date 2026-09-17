@@ -1,7 +1,5 @@
 # Big Weather — regional elevation study
 
-## Separate 3D dashboard
-
 The React + deck.gl **Elevation Explorer** is the project dashboard. It includes
 terrain, weather colours, date playback, location history and cached on-demand
 queries. Run `make install-explorer`, then `make explorer` and open
