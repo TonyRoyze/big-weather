@@ -82,21 +82,3 @@ make test
 make lint
 make windows-setup
 ```
-
-## Team deliverables
-
-- [Regional study and download details](docs/regional-study.md)
-- [Data contract](docs/data-contract.md)
-- [Team handoff and deployment](docs/team-handoff.md)
-- [Windows setup](docs/windows-setup.md)
-- [Final report outline](docs/final-report-outline.md)
-- [Presentation outline](docs/presentation-outline.md)
-
-Keep findings tied to the dataset version, filters, units and evidence table or job ID.
-Account for spatial grid sharing, elevation downscaling and non-random site selection.
-
-The dashboard also includes **Ask weather**, a plain-English analysis page powered
-by OpenAI and local Spark. See [setup and supported analyses](docs/ask-weather.md).
-
-The [Snowflake/dbt implementation package](warehouse/dbt/README.md) contains RAW table
-contracts, transformations, marts, coverage models, and offline validation for warehouse deployment.
