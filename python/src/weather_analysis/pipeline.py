@@ -6,6 +6,7 @@ there is no application compilation/build step. Publish only after this finishes
 
 from datetime import datetime, timezone
 import os
+import json
 from pathlib import Path
 import time
 import sys
@@ -24,6 +25,11 @@ def process(input_root: Path, output_root: Path) -> dict:
         or output_root in input_root.parents
     ):
         raise ValueError("Input and output must be separate, non-overlapping directories")
+    study_status = input_root.parent / "ingestion-status.json"
+    if study_status.exists():
+        state = json.loads(study_status.read_text())
+        if state["status"] != "complete":
+            raise ValueError("Regional ingestion is incomplete; resume it before processing")
     started = time.perf_counter()
     os.environ.setdefault("SPARK_LOCAL_IP", "127.0.0.1")
     os.environ.setdefault("PYSPARK_PYTHON", sys.executable)
@@ -41,7 +47,7 @@ def process(input_root: Path, output_root: Path) -> dict:
     # A failed rerun must not leave an old success/timing record behind.
     (output_root / "pipeline_metrics.json").unlink(missing_ok=True)
     try:
-        weather = spark.read.parquet(str(input_root / "weather")).repartition(4).cache()
+        weather = spark.read.parquet(str(input_root / "weather")).repartition(4, "location_id").sortWithinPartitions("location_id", "timestamp").cache()
         locations = spark.read.parquet(str(input_root / "locations"))
         validated = transforms.validate(weather).cache()
         enriched = transforms.enrich(validated, locations).cache()

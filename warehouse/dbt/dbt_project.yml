@@ -1,0 +1,29 @@
+name: big_weather
+version: '1.0.0'
+config-version: 2
+profile: big_weather
+require-dbt-version: [">=1.11.0", "<2.0.0"]
+model-paths: [models]
+seed-paths: [seeds]
+test-paths: [tests]
+macro-paths: [macros]
+clean-targets: [target, dbt_packages]
+vars:
+  coverage_start: '2020-01-01'
+  coverage_end: '2026-08-31'
+models:
+  big_weather:
+    +on_schema_change: fail
+    staging:
+      +schema: STAGING
+      +materialized: view
+    intermediate:
+      +schema: INTERMEDIATE
+      +materialized: view
+    marts:
+      +schema: MART
+      +materialized: table
+seeds:
+  big_weather:
+    +schema: STAGING
+    +quote_columns: false

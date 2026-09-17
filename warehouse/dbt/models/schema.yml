@@ -1,0 +1,187 @@
+version: 2
+models:
+- name: stg_locations
+  data_tests:
+  - unique_grain:
+      arguments:
+        columns:
+        - location_id
+  columns:
+  - name: location_id
+    data_tests:
+    - not_null
+- name: stg_weather_hourly
+  data_tests:
+  - unique_grain:
+      arguments:
+        columns:
+        - location_id
+        - observed_at
+  columns:
+  - name: location_id
+    data_tests:
+    - not_null
+    - relationships:
+        arguments:
+          to: ref('stg_locations')
+          field: location_id
+  - name: observed_at
+    data_tests:
+    - not_null
+- name: dim_locations
+  data_tests:
+  - unique_grain:
+      arguments:
+        columns:
+        - location_id
+  columns:
+  - name: location_id
+    data_tests:
+    - not_null
+- name: int_daily_observations
+  data_tests:
+  - unique_grain:
+      arguments:
+        columns:
+        - location_id
+        - observation_date
+        - metric
+  columns:
+  - name: location_id
+    data_tests:
+    - not_null
+  - name: observation_date
+    data_tests:
+    - not_null
+  - name: metric
+    data_tests:
+    - not_null
+- name: fct_daily_weather
+  data_tests:
+  - unique_grain:
+      arguments:
+        columns:
+        - location_id
+        - observation_date
+        - metric
+  columns:
+  - name: location_id
+    data_tests:
+    - not_null
+  - name: observation_date
+    data_tests:
+    - not_null
+  - name: metric
+    data_tests:
+    - not_null
+- name: coverage_daily
+  data_tests:
+  - unique_grain:
+      arguments:
+        columns:
+        - location_id
+        - observation_date
+        - metric
+  columns:
+  - name: location_id
+    data_tests:
+    - not_null
+  - name: observation_date
+    data_tests:
+    - not_null
+  - name: metric
+    data_tests:
+    - not_null
+- name: coverage_locations
+  data_tests:
+  - unique_grain:
+      arguments:
+        columns:
+        - location_id
+        - metric
+  columns:
+  - name: location_id
+    data_tests:
+    - not_null
+  - name: metric
+    data_tests:
+    - not_null
+- name: weather_rolling_30d
+  data_tests:
+  - unique_grain:
+      arguments:
+        columns:
+        - location_id
+        - observation_date
+        - metric
+  columns:
+  - name: location_id
+    data_tests:
+    - not_null
+  - name: observation_date
+    data_tests:
+    - not_null
+  - name: metric
+    data_tests:
+    - not_null
+- name: weather_yearly
+  data_tests:
+  - unique_grain:
+      arguments:
+        columns:
+        - location_id
+        - metric
+        - calendar_year
+  columns:
+  - name: location_id
+    data_tests:
+    - not_null
+  - name: metric
+    data_tests:
+    - not_null
+  - name: calendar_year
+    data_tests:
+    - not_null
+- name: weather_seasonal
+  data_tests:
+  - unique_grain:
+      arguments:
+        columns:
+        - location_id
+        - metric
+        - season
+        - season_year
+  columns:
+  - name: location_id
+    data_tests:
+    - not_null
+  - name: metric
+    data_tests:
+    - not_null
+  - name: season
+    data_tests:
+    - not_null
+  - name: season_year
+    data_tests:
+    - not_null
+- name: elevation_temperature
+  data_tests:
+  - unique_grain:
+      arguments:
+        columns:
+        - country
+        - observation_date
+  columns:
+  - name: country
+    data_tests:
+    - not_null
+  - name: observation_date
+    data_tests:
+    - not_null
+seeds:
+- name: weather_metrics
+  columns:
+  - name: metric
+    data_tests:
+    - unique
+    - not_null

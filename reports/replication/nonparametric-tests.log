@@ -1,0 +1,31 @@
+Historical: 43 rank; 8 spread
+Elevation bands [48, 26, 26]
+            variable  month      kw_H      p  spearman_rho  p_holm
+      temperature_2m      5 80.802465 0.0001     -0.940825  0.0028
+      temperature_2m      6 83.056624 0.0001     -0.935256  0.0028
+      temperature_2m      7 81.880156 0.0001     -0.941617  0.0028
+      temperature_2m      8 81.291364 0.0001     -0.930899  0.0028
+       precipitation      5 12.023993 0.0009      0.270155  0.0090
+       precipitation      6 14.861215 0.0010      0.389712  0.0090
+       precipitation      7  6.137883 0.0059      0.324622  0.0354
+       precipitation      8 10.136051 0.0032      0.387086  0.0224
+      wind_speed_10m      5 29.793997 0.0001     -0.621473  0.0028
+      wind_speed_10m      6 25.297646 0.0001     -0.570949  0.0028
+      wind_speed_10m      7 24.193515 0.0001     -0.570337  0.0028
+      wind_speed_10m      8 22.956143 0.0001     -0.573416  0.0028
+relative_humidity_2m      5 10.213442 0.0019      0.295933  0.0152
+relative_humidity_2m      6 18.397776 0.0001      0.454564  0.0028
+relative_humidity_2m      7 13.996750 0.0001      0.451600  0.0028
+relative_humidity_2m      8 17.076308 0.0001      0.479981  0.0028
+    surface_pressure      5 84.456603 0.0001     -0.994212  0.0028
+    surface_pressure      6 84.456603 0.0001     -0.989536  0.0028
+    surface_pressure      7 84.456603 0.0001     -0.988792  0.0028
+    surface_pressure      8 84.456603 0.0001     -0.988102  0.0028
+         cloud_cover      5  1.575195 0.5600      0.014584  1.0000
+         cloud_cover      6  5.741491 0.0079      0.219649  0.0395
+         cloud_cover      7  5.818442 0.0007      0.330756  0.0077
+         cloud_cover      8 14.074391 0.0001      0.420051  0.0028
+ shortwave_radiation      5  0.224405 0.8739     -0.011812  1.0000
+ shortwave_radiation      6  3.779877 0.0352     -0.254208  0.1056
+ shortwave_radiation      7  1.692536 0.0260     -0.219307  0.1040
+ shortwave_radiation      8  6.309560 0.0003     -0.342843  0.0036

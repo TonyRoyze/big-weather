@@ -1,0 +1,15 @@
+{
+  "years": [
+    2020,
+    2025
+  ],
+  "sites": 6,
+  "monthly_records": 432,
+  "hourly_records": 315648,
+  "tests": 42,
+  "rotations_per_test": 248832,
+  "method": "Exact within-year circular phase alignment test of monthly ranks; first year fixed; Holm across 42 tests",
+  "assumptions": "Independent year blocks; uniformly exchangeable cyclic phase under null; wraparound preserves cyclic, not all chronological, dependence",
+  "script_sha256": "78788039d2db79a56f56caf4ccf3952810d9b50ea9d18c23a600113eb9563f2e",
+  "source_hashes_verified": true
+}

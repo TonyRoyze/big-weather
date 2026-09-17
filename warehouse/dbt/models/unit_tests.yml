@@ -1,0 +1,30 @@
+version: 2
+unit_tests:
+- name: daily_values_require_24_valid_hours
+  model: int_daily_observations
+  given:
+  - input: ref('int_weather_values')
+    format: csv
+    fixture: hourly_daily_cases
+  expect:
+    rows:
+    - location_id: a
+      metric: temperature_2m
+      daily_value: 2
+      valid_hours: 24
+      is_complete: true
+    - location_id: a
+      metric: precipitation
+      daily_value: 48
+      valid_hours: 24
+      is_complete: true
+    - location_id: b
+      metric: precipitation
+      daily_value: null
+      valid_hours: 23
+      is_complete: false
+    - location_id: c
+      metric: temperature_2m
+      daily_value: null
+      valid_hours: 23
+      is_complete: false

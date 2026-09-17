@@ -1,0 +1,283 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.24.2",
+    "script_metadata_hash": "dfb472802426e7b7a59df06e376d066d"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "95e4416d6825cdaa071e13a7c5bfa951",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "790338d62ef433a69e1a3d7ae51f31e2",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "8bf0b039f300a3a541a25b3ee6e84cee",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"moisture-and-precipitation-relationships\">Moisture and precipitation relationships</h1>\n<span class=\"paragraph\">Focus variables in this notebook: <code>relative_humidity_2m</code>, <code>precipitation</code>, <code>rain</code>, <code>et0_fao_evapotranspiration</code>, <code>vapour_pressure_deficit</code>.</span>\n<span class=\"paragraph\">Pick one focus variable and Spark will compare it with the <strong>other 16 selected\nweather variables</strong>. The first view ranks Pearson\ncorrelations; the second lets you inspect any pair as a sampled scatterplot.</span>\n<span class=\"paragraph\">Correlation is descriptive, not causal. Weather variables are autocorrelated,\nseasonal, and often derived from each other. <code>weather_code</code> is categorical,\nwind direction is circular, and <code>is_day</code> is binary, so interpret their Pearson\ncoefficients cautiously.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "8407611dc2cbf2f074db90e4c4db8d21",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"1-data-source\">1. Data source</h2></span><marimo-ui-element object-id='bkHC-0' random-id='bce98e9e-b966-dd47-408b-7f057a6fde2d'><marimo-dropdown data-initial-value='[&quot;Downloaded raw partitions (may be incomplete)&quot;]' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eSpark data source&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-options='[&quot;Downloaded raw partitions (may be incomplete)&quot;]' data-allow-select-none='false' data-searchable='false' data-full-width='false' data-disabled='false'></marimo-dropdown></marimo-ui-element><span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Raw: <code>/Users/vidura/Code/big-weather/data/regional-2020-2025/raw</code><br />\nPublished: <code>/Users/vidura/Code/big-weather/data/platform</code></span></span></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "b46233f49ee9dd6257578d83d3393d5b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "WARNING: Using incubator modules: jdk.incubator.vector\nUsing Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties\nSetting default log level to \"WARN\".\nTo adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).\n26/09/15 13:39:41 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "PKri",
+      "code_hash": "a51abe3ec0df0144a23e62c2d2a35060",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "\r[Stage 23:>                                                         (0 + 1) / 1]\r\r                                                                                \r\r[Stage 24:>                                                       (0 + 4) / 106]\r\r[Stage 24:==>                                                     (4 + 4) / 106]\r\r[Stage 24:===>                                                    (6 + 5) / 106]\r\r[Stage 24:====>                                                   (8 + 4) / 106]\r\r[Stage 24:=====>                                                 (11 + 4) / 106]\r\r[Stage 24:=======>                                               (14 + 4) / 106]\r\r[Stage 24:========>                                              (17 + 4) / 106]\r\r[Stage 24:=========>                                             (18 + 4) / 106]\r\r[Stage 24:============>                                          (24 + 4) / 106]\r\r[Stage 24:===============>                                       (29 + 4) / 106]\r\r[Stage 24:==================>                                    (35 + 4) / 106]\r\r[Stage 24:=====================>                                 (42 + 4) / 106]\r\r[Stage 24:=======================>                               (45 + 4) / 106]\r\r[Stage 24:=========================>                             (49 + 4) / 106]\r\r[Stage 24:==========================>                            (51 + 4) / 106]\r\r[Stage 24:===========================>                           (53 + 4) / 106]\r\r[Stage 24:==============================>                        (58 + 4) / 106]\r\r[Stage 24:================================>                      (62 + 4) / 106]\r\r[Stage 24:===================================>                   (69 + 4) / 106]\r\r[Stage 24:=======================================>               (76 + 4) / 106]\r\r[Stage 24:==========================================>            (82 + 4) / 106]\r\r[Stage 24:=============================================>         (88 + 4) / 106]\r\r[Stage 24:================================================>      (93 + 4) / 106]\r\r[Stage 24:==================================================>    (98 + 4) / 106]\r\r[Stage 24:==================================================>   (100 + 4) / 106]\r\r[Stage 24:====================================================> (104 + 2) / 106]\r\r                                                                                \r",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "Xref",
+      "code_hash": "d30728f68dc22fc918baad20d02b0649",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\"><strong>Raw downloaded partitions \u2014 coverage can be incomplete</strong> \u00b7 <strong>929,400 rows</strong> \u00b7 <strong>18 loaded locations</strong> \u00b7 2020-01-01 to 2025-12-31 \u00b7 8 Spark shuffle partitions</span></span><marimo-accordion data-labels='[&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eCoverage by location&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;]' data-multiple='false'><div><marimo-ui-element object-id='Xref-0' random-id='463b5c61-d828-73f0-0455-58de908667dc'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;_marimo_row_id&#92;&quot;:0,&#92;&quot;location_id&#92;&quot;:&#92;&quot;lk_anuradhapura&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;Anuradhapura&#92;&quot;,&#92;&quot;first_timestamp&#92;&quot;:&#92;&quot;2020-01-01 00:00:00+00:00&#92;&quot;,&#92;&quot;last_timestamp&#92;&quot;:&#92;&quot;2025-12-31 23:00:00+00:00&#92;&quot;,&#92;&quot;hourly_rows&#92;&quot;:52608},{&#92;&quot;_marimo_row_id&#92;&quot;:1,&#92;&quot;location_id&#92;&quot;:&#92;&quot;lk_batticaloa&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;Batticaloa&#92;&quot;,&#92;&quot;first_timestamp&#92;&quot;:&#92;&quot;2020-01-01 00:00:00+00:00&#92;&quot;,&#92;&quot;last_timestamp&#92;&quot;:&#92;&quot;2025-12-31 23:00:00+00:00&#92;&quot;,&#92;&quot;hourly_rows&#92;&quot;:52608},{&#92;&quot;_marimo_row_id&#92;&quot;:2,&#92;&quot;location_id&#92;&quot;:&#92;&quot;lk_colombo&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;Colombo&#92;&quot;,&#92;&quot;first_timestamp&#92;&quot;:&#92;&quot;2020-01-01 00:00:00+00:00&#92;&quot;,&#92;&quot;last_timestamp&#92;&quot;:&#92;&quot;2025-12-31 23:00:00+00:00&#92;&quot;,&#92;&quot;hourly_rows&#92;&quot;:52608},{&#92;&quot;_marimo_row_id&#92;&quot;:3,&#92;&quot;location_id&#92;&quot;:&#92;&quot;lk_galle&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;Galle&#92;&quot;,&#92;&quot;first_timestamp&#92;&quot;:&#92;&quot;2020-01-01 00:00:00+00:00&#92;&quot;,&#92;&quot;last_timestamp&#92;&quot;:&#92;&quot;2025-12-31 23:00:00+00:00&#92;&quot;,&#92;&quot;hourly_rows&#92;&quot;:52608},{&#92;&quot;_marimo_row_id&#92;&quot;:4,&#92;&quot;location_id&#92;&quot;:&#92;&quot;lk_gampola&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;Gampola&#92;&quot;,&#92;&quot;first_timestamp&#92;&quot;:&#92;&quot;2020-01-01 00:00:00+00:00&#92;&quot;,&#92;&quot;last_timestamp&#92;&quot;:&#92;&quot;2025-12-31 23:00:00+00:00&#92;&quot;,&#92;&quot;hourly_rows&#92;&quot;:52608},{&#92;&quot;_marimo_row_id&#92;&quot;:5,&#92;&quot;location_id&#92;&quot;:&#92;&quot;lk_hambantota&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;Hambantota&#92;&quot;,&#92;&quot;first_timestamp&#92;&quot;:&#92;&quot;2020-01-01 00:00:00+00:00&#92;&quot;,&#92;&quot;last_timestamp&#92;&quot;:&#92;&quot;2025-12-31 23:00:00+00:00&#92;&quot;,&#92;&quot;hourly_rows&#92;&quot;:52608},{&#92;&quot;_marimo_row_id&#92;&quot;:6,&#92;&quot;location_id&#92;&quot;:&#92;&quot;lk_jaffna&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;Jaffna&#92;&quot;,&#92;&quot;first_timestamp&#92;&quot;:&#92;&quot;2020-01-01 00:00:00+00:00&#92;&quot;,&#92;&quot;last_timestamp&#92;&quot;:&#92;&quot;2025-12-31 23:00:00+00:00&#92;&quot;,&#92;&quot;hourly_rows&#92;&quot;:52608},{&#92;&quot;_marimo_row_id&#92;&quot;:7,&#92;&quot;location_id&#92;&quot;:&#92;&quot;lk_kandy&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;Kandy&#92;&quot;,&#92;&quot;first_timestamp&#92;&quot;:&#92;&quot;2020-01-01 00:00:00+00:00&#92;&quot;,&#92;&quot;last_timestamp&#92;&quot;:&#92;&quot;2025-12-31 23:00:00+00:00&#92;&quot;,&#92;&quot;hourly_rows&#92;&quot;:52608},{&#92;&quot;_marimo_row_id&#92;&quot;:8,&#92;&quot;location_id&#92;&quot;:&#92;&quot;lk_kegalle&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;Kegalle&#92;&quot;,&#92;&quot;first_timestamp&#92;&quot;:&#92;&quot;2020-01-01 00:00:00+00:00&#92;&quot;,&#92;&quot;last_timestamp&#92;&quot;:&#92;&quot;2025-12-31 23:00:00+00:00&#92;&quot;,&#92;&quot;hourly_rows&#92;&quot;:52608},{&#92;&quot;_marimo_row_id&#92;&quot;:9,&#92;&quot;location_id&#92;&quot;:&#92;&quot;lk_kurunegala&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;Kurunegala&#92;&quot;,&#92;&quot;first_timestamp&#92;&quot;:&#92;&quot;2020-01-01 00:00:00+00:00&#92;&quot;,&#92;&quot;last_timestamp&#92;&quot;:&#92;&quot;2025-12-31 23:00:00+00:00&#92;&quot;,&#92;&quot;hourly_rows&#92;&quot;:52608}]&quot;' data-total-rows='18' data-total-columns='5' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;location_id&quot;,[&quot;string&quot;,&quot;object&quot;]],[&quot;name&quot;,[&quot;string&quot;,&quot;object&quot;]],[&quot;first_timestamp&quot;,[&quot;datetime&quot;,&quot;datetime64[ns, UTC]&quot;]],[&quot;last_timestamp&quot;,[&quot;datetime&quot;,&quot;datetime64[ns, UTC]&quot;]],[&quot;hourly_rows&quot;,[&quot;integer&quot;,&quot;int64&quot;]]]' data-selection='&quot;multi&quot;' data-show-filters='true' data-show-download='true' data-show-search='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='true' data-row-headers='[]' data-hidden-columns='[]' data-has-stable-row-id='true' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element></div></marimo-accordion></div>"
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "\r[Stage 27:>                                                         (0 + 4) / 4]\r\r                                                                                \r",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "b996970492bd47638ec4c77699c47058",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"2-choose-the-analysis-slice\">2. Choose the analysis slice</h2></span><div style='display: flex;flex: 1;flex-direction: row;justify-content: space-between;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><div style='flex: 1'><marimo-ui-element object-id='SFPL-0' random-id='73a88ddc-333e-7017-ea48-ec2bde56f0ec'><marimo-dropdown data-initial-value='[&quot;relative_humidity_2m&quot;]' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eFocus variable&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-options='[&quot;relative_humidity_2m&quot;,&quot;precipitation&quot;,&quot;rain&quot;,&quot;et0_fao_evapotranspiration&quot;,&quot;vapour_pressure_deficit&quot;]' data-allow-select-none='false' data-searchable='true' data-full-width='false' data-disabled='false'></marimo-dropdown></marimo-ui-element></div><div style='flex: 1'><marimo-ui-element object-id='SFPL-4' random-id='258f51ca-b13d-296f-a336-2d0227863c69'><marimo-slider data-initial-value='16' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eRelationships to display&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-start='8' data-stop='16' data-step='1' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='true' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element></div></div><marimo-ui-element object-id='SFPL-1' random-id='737e0a07-7e55-8a7a-ce4f-b232bfa4f1c6'><marimo-multiselect data-initial-value='[&quot;Anuradhapura (lk_anuradhapura)&quot;,&quot;Batticaloa (lk_batticaloa)&quot;,&quot;Colombo (lk_colombo)&quot;,&quot;Galle (lk_galle)&quot;]' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eLocations (up to 12)&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-options='[&quot;Anuradhapura (lk_anuradhapura)&quot;,&quot;Batticaloa (lk_batticaloa)&quot;,&quot;Colombo (lk_colombo)&quot;,&quot;Galle (lk_galle)&quot;,&quot;Gampola (lk_gampola)&quot;,&quot;Hambantota (lk_hambantota)&quot;,&quot;Jaffna (lk_jaffna)&quot;,&quot;Kandy (lk_kandy)&quot;,&quot;Kegalle (lk_kegalle)&quot;,&quot;Kurunegala (lk_kurunegala)&quot;,&quot;Mannar (lk_mannar)&quot;,&quot;Matale (lk_matale)&quot;,&quot;Matara (lk_matara)&quot;,&quot;Nawalapitiya (lk_nawalapitiya)&quot;,&quot;Polonnaruwa (lk_polonnaruwa)&quot;,&quot;Puttalam (lk_puttalam)&quot;,&quot;Ratnapura (lk_ratnapura)&quot;,&quot;Trincomalee (lk_trincomalee)&quot;]' data-full-width='false' data-max-selections='12' data-disabled='false'></marimo-multiselect></marimo-ui-element><marimo-ui-element object-id='SFPL-2' random-id='2f6e9626-813c-b0ab-ef41-fe92f4d3a42d'><marimo-date-range data-initial-value='[&quot;2020-01-01&quot;,&quot;2025-12-31&quot;]' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eInclusive date range&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-start='&quot;2020-01-01&quot;' data-stop='&quot;2025-12-31&quot;' data-full-width='false' data-disabled='false'></marimo-date-range></marimo-ui-element><marimo-ui-element object-id='SFPL-3' random-id='87d8e0db-dbd2-f69b-6d1f-58fd83c2d32b'><marimo-radio data-initial-value='&quot;Daily means&quot;' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eAnalysis grain&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-options='[&quot;Hourly readings&quot;,&quot;Daily means&quot;,&quot;Weekly means&quot;,&quot;Monthly means&quot;]' data-inline='true' data-disabled='false'></marimo-radio></marimo-ui-element><span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Daily/weekly/monthly modes average each hourly field within each location-period before correlation. Hourly mode uses retained observations directly. No missing values are imputed.</span></span></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "b80a2cf403cdcf53ca131f0ed0dbf3ce",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "dde1d9d0b0bd10e3c2d5cd59fedcb51f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "\r[Stage 36:>                                                         (0 + 4) / 4]\r\r[Stage 36:===========================================>              (3 + 1) / 4]\r\r[Stage 38:>                                                         (0 + 1) / 1]\r\r[Stage 41:>                                                         (0 + 1) / 1]\r\r                                                                                \r",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "bf0267dad57612e3b3207a59df76fac4",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "3c88631825bd1e5432a906a43a03ad2b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"4-choose-scatterplots\">4. Choose scatterplots</h2>\n<span class=\"paragraph\">Select the variables first; the grid and Spark projection update together. Defaults are the six strongest finite relationships in the current slice.</span></span><marimo-ui-element object-id='emfo-0' random-id='91f6af2b-065b-22ee-c203-4f12d9aab5c7'><marimo-multiselect data-initial-value='[&quot;vapour_pressure_deficit&quot;,&quot;et0_fao_evapotranspiration&quot;,&quot;soil_moisture_0_to_7cm&quot;,&quot;temperature_2m&quot;,&quot;soil_temperature_0_to_7cm&quot;,&quot;dew_point_2m&quot;]' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eVariables to show in the scatterplot grid (up to 12)&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-options='[&quot;vapour_pressure_deficit&quot;,&quot;et0_fao_evapotranspiration&quot;,&quot;soil_moisture_0_to_7cm&quot;,&quot;temperature_2m&quot;,&quot;soil_temperature_0_to_7cm&quot;,&quot;dew_point_2m&quot;,&quot;boundary_layer_height&quot;,&quot;direct_radiation&quot;,&quot;precipitation&quot;,&quot;rain&quot;,&quot;sunshine_duration&quot;,&quot;cloud_cover&quot;,&quot;apparent_temperature&quot;,&quot;pressure_msl&quot;,&quot;surface_pressure&quot;,&quot;wind_speed_100m&quot;]' data-full-width='false' data-max-selections='12' data-disabled='false'></marimo-multiselect></marimo-ui-element><div style='display: flex;flex: 1;flex-direction: row;justify-content: space-between;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><div style='flex: 1'><marimo-ui-element object-id='emfo-1' random-id='f37f3b06-65b9-4a03-ad48-6927604b1e88'><marimo-slider data-initial-value='1' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eMaximum sampled periods&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-start='0' data-stop='3' data-step='1' data-steps='[1000,2500,5000,10000]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='true' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element></div><div style='flex: 1'><marimo-ui-element object-id='emfo-2' random-id='df34156f-c2c5-3773-377b-8e6fe6600ea7'><marimo-slider data-initial-value='3' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eGrid columns&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-start='2' data-stop='4' data-step='1' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='true' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element></div></div></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "f8548c3cc70b1a92fbe8468adaab9543",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "\r[Stage 43:>                                                         (0 + 4) / 4]\r\r                                                                                \r",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "267a4492063503e1098cbd92a75204e5",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "ROlb",
+      "code_hash": "8b83e192a2ce9b7cce4f947726073c50",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "\r[Stage 47:>                                                         (0 + 4) / 4]\r\r                                                                                \r",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "ZHCJ",
+      "code_hash": "b2c374b20b181e4c16625148e7f0ea6a",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "qnkX",
+      "code_hash": "39a9085e69df060dbb7db1517f18bf31",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"6-change-over-time\">6. Change over time</h2>\n<span class=\"paragraph\">The time-series grid uses the focus variable plus the variables selected for the scatterplot grid.</span></span><marimo-ui-element object-id='qnkX-0' random-id='7ccf495c-6f4c-d7c7-29e6-93f88e9a0246'><marimo-radio data-initial-value='&quot;Monthly&quot;' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eTime-series grain&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-options='[&quot;Weekly&quot;,&quot;Monthly&quot;,&quot;Yearly&quot;]' data-inline='true' data-disabled='false'></marimo-radio></marimo-ui-element></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Vxnm",
+      "code_hash": "0e143375abd7687e04c760ef66bbb15b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "\r[Stage 56:>                                                         (0 + 4) / 4]\r\r                                                                                \r",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "TqIu",
+      "code_hash": "ad144b31e741fe41747e267581aded98",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "0c8940070c19dc211299b23747439f4e",
+      "outputs": [],
+      "console": []
+    }
+  ]
+}

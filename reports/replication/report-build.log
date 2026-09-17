@@ -1,0 +1,27 @@
+typst compile docs/report/main.typ docs/report/main.pdf
+warning: unknown font family: roboto slab
+    ┌─ @preview/classy-tudelft-thesis:0.1.0/src/template.typ:370:10
+    │
+370 │     font: "Roboto Slab",
+    │           ^^^^^^^^^^^^^
+
+warning: unknown font family: roboto slab
+    ┌─ @preview/classy-tudelft-thesis:0.1.0/src/template.typ:382:10
+    │
+382 │     font: "Roboto Slab",
+    │           ^^^^^^^^^^^^^
+
+warning: variable fonts are not currently supported and may render incorrectly
+   ┌─ @preview/classy-tudelft-thesis:0.1.0/src/template.typ:62:63
+   │
+62 │   set text(size: normal, lang: language, region: region, font: main-font)
+   │                                                                ^^^^^^^^^
+   │
+   = hint: try installing a static version of "stix two text" instead
+
+warning: unknown font family: lora
+    ┌─ @preview/classy-tudelft-thesis:0.1.0/src/template.typ:130:72
+    │
+130 │       text(size: 70pt, fill: rgb(80, 80, 80), weight: "semibold", font: "Lora")[
+    │                                                                         ^^^^^^
+

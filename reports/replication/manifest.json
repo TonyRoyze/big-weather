@@ -1,0 +1,141 @@
+{
+  "created_utc": "2026-09-16T06:06:56.389705+00:00",
+  "reference_repository": "https://github.com/KaumindiHerath/Big_Data_Geospatial_Project",
+  "reference_commit": "75aa5b3b00cbe3630833ad49902026171a054332",
+  "fingerprint": "88f9c909b05c7590789d6373a6bf90066ae3ff39fd7762b53575c1885581a078",
+  "rows": 1230960,
+  "committed_files": 1901,
+  "raw_bytes": 154676934,
+  "weather_columns": 47,
+  "locations": 100,
+  "countries": 13,
+  "earliest": "2020-01-01 00:00:00+00:00",
+  "latest": "2026-08-31 23:00:00+00:00",
+  "elevation_min": 3.0,
+  "elevation_max": 4321.0,
+  "common_start": "2026-05-05",
+  "common_end": "2026-08-31",
+  "common_days": 119,
+  "common_rows": 285600,
+  "key_duplicates": 0,
+  "missing": [
+    {
+      "index": "boundary_layer_height",
+      "missing": 74256,
+      "percent": 6.032364983427569
+    },
+    {
+      "index": "total_column_integrated_water_vapour",
+      "missing": 74256,
+      "percent": 6.032364983427569
+    }
+  ],
+  "plausibility": [
+    {
+      "variable": "temperature_2m",
+      "lower": -90,
+      "upper": 60,
+      "outside": 0
+    },
+    {
+      "variable": "apparent_temperature",
+      "lower": -100,
+      "upper": 75,
+      "outside": 0
+    },
+    {
+      "variable": "dew_point_2m",
+      "lower": -100,
+      "upper": 60,
+      "outside": 0
+    },
+    {
+      "variable": "relative_humidity_2m",
+      "lower": 0,
+      "upper": 100,
+      "outside": 0
+    },
+    {
+      "variable": "precipitation",
+      "lower": 0,
+      "upper": 500,
+      "outside": 0
+    },
+    {
+      "variable": "rain",
+      "lower": 0,
+      "upper": 500,
+      "outside": 0
+    },
+    {
+      "variable": "wind_speed_10m",
+      "lower": 0,
+      "upper": 60,
+      "outside": 0
+    },
+    {
+      "variable": "wind_speed_100m",
+      "lower": 0,
+      "upper": 75,
+      "outside": 0
+    },
+    {
+      "variable": "wind_gusts_10m",
+      "lower": 0,
+      "upper": 90,
+      "outside": 0
+    },
+    {
+      "variable": "pressure_msl",
+      "lower": 870,
+      "upper": 1085,
+      "outside": 0
+    },
+    {
+      "variable": "surface_pressure",
+      "lower": 300,
+      "upper": 1100,
+      "outside": 0
+    },
+    {
+      "variable": "cloud_cover",
+      "lower": 0,
+      "upper": 100,
+      "outside": 0
+    },
+    {
+      "variable": "latitude",
+      "lower": -90,
+      "upper": 90,
+      "outside": 0
+    },
+    {
+      "variable": "longitude",
+      "lower": -180,
+      "upper": 180,
+      "outside": 0
+    },
+    {
+      "variable": "elevation_m",
+      "lower": -430,
+      "upper": 8849,
+      "outside": 0
+    }
+  ],
+  "versions": {
+    "pandas": "3.0.5",
+    "pyarrow": "25.0.1",
+    "scipy": "1.17.1",
+    "scikit-learn": "1.9.1",
+    "statsmodels": "0.15.0",
+    "matplotlib": "3.11.2",
+    "xgboost": "3.2.0",
+    "shap": "0.51.0"
+  },
+  "reference_hashes": {
+    "regression.py": "0c92d3834b0162da0fc9d22a404b3fbd6bdd3111c847410dc75374a17be12c31",
+    "ml_pipeline.py": "ef513f6509166ef419b80984307f0102cf96bffcf13ba519af424d699a356b26",
+    "data_quality.py": "4ea379e39ed52cf608eba94def401f894892c80afb7b708345af79ba9cd02219"
+  },
+  "delivered_runner_sha256": "b31059e799d0fd45c5e35f7e35cd4b4febbf4ffd2eab0b3f83220385f6799ff0"
+}

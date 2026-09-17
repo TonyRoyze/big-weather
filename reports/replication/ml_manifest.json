@@ -1,0 +1,30 @@
+{
+  "train_rows": 211200,
+  "test_rows": 74400,
+  "train_start": "2026-05-05 00:00:00+00:00",
+  "train_end": "2026-07-31 23:00:00+00:00",
+  "test_start": "2026-08-01 00:00:00+00:00",
+  "test_end": "2026-08-31 23:00:00+00:00",
+  "features": [
+    "elevation_m",
+    "latitude",
+    "longitude",
+    "month_sin",
+    "month_cos",
+    "hour_sin",
+    "hour_cos",
+    "year"
+  ],
+  "best_parameters": {
+    "n_estimators": 300,
+    "min_samples_leaf": 5,
+    "max_features": 0.7,
+    "max_depth": null
+  },
+  "tuning_rows": 40000,
+  "tuning_candidates": 10,
+  "folds": 4,
+  "permutation_sample": 5000,
+  "shap_sample": 2000,
+  "seed": 42
+}

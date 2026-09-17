@@ -1,7 +1,7 @@
 # Windows team setup
 
 Share **`dist/BigWeather-Setup.exe`** with teammates. It is a standalone Windows
-x64 bootstrapper containing the project source and the active published dataset.
+x64 bootstrapper containing the project source and, when available, the active published dataset.
 Teammates do not need to install Python, Java, Git, Go or Make beforehand.
 
 ## Teammate steps
@@ -26,12 +26,12 @@ planning estimates. Network download time depends on Ubuntu/package availability
 - Installs Python 3.12 (Ubuntu's Python), Java 21, Make, Git and CA certificates
   through Ubuntu's signed package repositories.
 - Creates a Linux user named `bigweather` and a project virtual environment.
-- Installs the project's ingestion, PySpark, Streamlit, Plotly and development/test
+- Installs the project's ingestion, PySpark, Streamlit, Plotly, marimo notebook and development/test
   dependencies from the configured Python package index (normally PyPI).
-- Extracts this build's source and published Parquet snapshot, so dashboard and
-  findings work can start without rerunning historical ingestion.
+- Extracts the source and any published Parquet snapshot included in this build.
+  A build made before publication contains no dataset.
 - Checks imports, a real PySpark computation, Parquet writing/reading and the bundled
-  location data before creating desktop shortcuts.
+  location data when bundled before creating desktop shortcuts.
 
 PySpark runs inside WSL's Linux environment; the desktop shortcuts and browser run
 on Windows. This uses the same POSIX file locking/process behavior as the current
@@ -59,10 +59,10 @@ existing WSL default distro/user settings alone. The Linux project user has no
 password/sudo setup; use the Windows WSL root account for administrative maintenance
 if needed. Application launchers run as the ordinary project user.
 
-The bundled snapshot includes processed data and location metadata, not raw API
-responses or raw hourly input partitions. Run `make ingest-all` from the project
-terminal before rebuilding the full pipeline from raw sources. Existing dashboard
-and analysis jobs work with the snapshot immediately.
+A bundled snapshot includes processed data and location metadata, not raw hourly inputs.
+If this build has no dataset, obtain the regional release from the ingestion owner and
+place it under `data/platform`, including `active.json`. The dashboard shows setup
+instructions until then. Only the designated ingestion machine should run `make ingest-all`.
 
 ## Troubleshooting and validation limits
 
@@ -88,7 +88,7 @@ make windows-setup
 ```
 
 The builder validates the published Parquet checksums, packages allowlisted source
-files and the active dataset, and cross-compiles Go for Windows amd64. It excludes
+files and the active dataset when one exists, and cross-compiles Go for Windows amd64. It excludes
 `.env`, Git history, virtual environments, caches, raw data and previous installers.
 It writes:
 
@@ -102,4 +102,3 @@ dist/BigWeather-Setup.manifest.json
 The manifest lists bundled file hashes. `BigWeather-Setup.exe --extract <folder>`
 extracts its scripts and archive for inspection without installing anything.
 Go is only a build-time requirement; the installer does not add it to teammate PCs.
-Typst (for rebuilding the archived interim report) is optional and not installed.

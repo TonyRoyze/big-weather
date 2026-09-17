@@ -1,0 +1,12 @@
+{
+  "panel_sha256": "6b5f52182bb59b79134972fec47a21e11a4f24c285e9887be9bf8c8f960975b1",
+  "script_sha256": "74d313685a1ecd40b201a9d44a24151c38340ed4020a2c8cd9c4ab701b838979",
+  "site_months": 400,
+  "monthly_test_count": 28,
+  "interaction_test_count": 14,
+  "multiplicity": "Holm; 28 slopes and 14 interaction tests separately",
+  "monthly_covariance": "HC3, Student t",
+  "interaction_covariance": "site-clustered, corrected F, 99 denominator df",
+  "sensitivity": "country-clustered covariance; 13 clusters; exploratory",
+  "seasonality": "Not identifiable as recurring seasonality from four months in one year"
+}

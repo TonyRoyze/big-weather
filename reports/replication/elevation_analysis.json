@@ -1,0 +1,53 @@
+{
+  "status": "passed",
+  "source_fingerprint": "88f9c909b05c7590789d6373a6bf90066ae3ff39fd7762b53575c1885581a078",
+  "panel_sha256": "6b5f52182bb59b79134972fec47a21e11a4f24c285e9887be9bf8c8f960975b1",
+  "analysis_script_sha256": "4d62c2dff6171aecb4f822304ad2dd5d4bd8596b07c674920c8c559ff72d467a",
+  "target": "elevation_m",
+  "observation_unit": "one period mean per location",
+  "sites": 100,
+  "countries": 13,
+  "features": [
+    "temperature_2m",
+    "precipitation",
+    "wind_speed_10m",
+    "relative_humidity_2m",
+    "surface_pressure",
+    "cloud_cover",
+    "shortwave_radiation"
+  ],
+  "validation": "5-fold GroupKFold by country; one held-out prediction per site",
+  "permutation_repeats": 20,
+  "permutation_scoring": "negative mean absolute error",
+  "seed": 42,
+  "model_parameters": {
+    "n_estimators": 300,
+    "max_depth": 6,
+    "min_samples_leaf": 2,
+    "max_features": 1.0
+  },
+  "tuning": "none",
+  "metrics": [
+    {
+      "variant": "All weather features",
+      "sites": 100,
+      "mae_m": 63.11486958996408,
+      "r2": 0.985540204034422,
+      "baseline_mae_m": 919.4142327882962
+    },
+    {
+      "variant": "Without surface pressure",
+      "sites": 100,
+      "mae_m": 147.03440730886268,
+      "r2": 0.9631163378864896,
+      "baseline_mae_m": 919.4142327882962
+    }
+  ],
+  "checks": [
+    "balanced coverage",
+    "complete inputs",
+    "unique hourly keys",
+    "disjoint train/test countries and sites",
+    "one held-out prediction per site"
+  ]
+}

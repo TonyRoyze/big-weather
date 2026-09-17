@@ -1,0 +1,101 @@
+location_id,query,country_code,region,latitude,longitude
+lk_colombo,Colombo,LK,South Asia,6.9271,79.8612
+lk_jaffna,Jaffna,LK,South Asia,9.6615,80.0255
+lk_trincomalee,Trincomalee,LK,South Asia,8.5874,81.2152
+lk_batticaloa,Batticaloa,LK,South Asia,7.7102,81.6924
+lk_galle,Galle,LK,South Asia,6.0535,80.2210
+lk_matara,Matara,LK,South Asia,5.9549,80.5550
+lk_hambantota,Hambantota,LK,South Asia,6.1429,81.1212
+lk_puttalam,Puttalam,LK,South Asia,8.0362,79.8283
+lk_mannar,Mannar,LK,South Asia,8.9810,79.9044
+lk_anuradhapura,Anuradhapura,LK,South Asia,8.3114,80.4037
+lk_polonnaruwa,Polonnaruwa,LK,South Asia,7.9403,81.0188
+lk_kurunegala,Kurunegala,LK,South Asia,7.4863,80.3647
+lk_ratnapura,Ratnapura,LK,South Asia,6.6828,80.3992
+lk_kegalle,Kegalle,LK,South Asia,7.2513,80.3464
+lk_matale,Matale,LK,South Asia,7.4675,80.6234
+lk_kandy,Kandy,LK,South Asia,7.2906,80.6337
+lk_gampola,Gampola,LK,South Asia,7.1643,80.5696
+lk_nawalapitiya,Nawalapitiya,LK,South Asia,7.0505,80.5300
+lk_badulla,Badulla,LK,South Asia,6.9934,81.0550
+lk_ella,Ella,LK,South Asia,6.8667,81.0466
+lk_welimada,Welimada,LK,South Asia,6.9020,80.9223
+lk_bandarawela,Bandarawela,LK,South Asia,6.8259,80.9982
+lk_haputale,Haputale,LK,South Asia,6.7681,80.9590
+lk_hatton,Hatton,LK,South Asia,6.8916,80.5955
+lk_diyatalawa,Diyatalawa,LK,South Asia,6.8070,80.9595
+lk_nuwara_eliya,Nuwara Eliya,LK,South Asia,6.9497,80.7891
+lk_ambewela,Ambewela,LK,South Asia,6.8992,80.8028
+lk_horton_plains,Horton Plains,LK,South Asia,6.8021,80.8070
+lk_pidurutalagala,Pidurutalagala,LK,South Asia,7.0008,80.7733
+lk_sri_pada,Sri Pada,LK,South Asia,6.8096,80.4994
+in_chennai,Chennai,IN,South Asia,13.0827,80.2707
+in_thoothukudi,Thoothukudi,IN,South Asia,8.7642,78.1348
+in_kanyakumari,Kanyakumari,IN,South Asia,8.0883,77.5385
+in_thiruvananthapuram,Thiruvananthapuram,IN,South Asia,8.5241,76.9366
+in_kochi,Kochi,IN,South Asia,9.9312,76.2673
+in_madurai,Madurai,IN,South Asia,9.9252,78.1198
+in_coimbatore,Coimbatore,IN,South Asia,11.0168,76.9558
+in_bengaluru,Bengaluru,IN,South Asia,12.9716,77.5946
+in_mysuru,Mysuru,IN,South Asia,12.2958,76.6394
+in_munnar,Munnar,IN,South Asia,10.0889,77.0595
+in_kodaikanal,Kodaikanal,IN,South Asia,10.2381,77.4892
+in_ooty,Ooty,IN,South Asia,11.4102,76.6950
+in_doddabetta,Doddabetta,IN,South Asia,11.4016,76.7358
+in_anamudi,Anamudi,IN,South Asia,10.1690,77.0606
+in_shillong,Shillong,IN,South Asia,25.5788,91.8933
+in_darjeeling,Darjeeling,IN,South Asia,27.0410,88.2663
+in_gangtok,Gangtok,IN,South Asia,27.3389,88.6065
+in_tawang,Tawang,IN,South Asia,27.5861,91.8594
+in_lachen,Lachen,IN,South Asia,27.7287,88.5565
+in_nathu_la,Nathu La,IN,South Asia,27.3868,88.8308
+np_biratnagar,Biratnagar,NP,South Asia,26.4525,87.2718
+np_janakpur,Janakpur,NP,South Asia,26.7271,85.9407
+np_bharatpur,Bharatpur,NP,South Asia,27.6833,84.4333
+np_pokhara,Pokhara,NP,South Asia,28.2096,83.9856
+np_kathmandu,Kathmandu,NP,South Asia,27.7172,85.3240
+np_dhulikhel,Dhulikhel,NP,South Asia,27.6221,85.5421
+np_jomsom,Jomsom,NP,South Asia,28.7806,83.7278
+np_lukla,Lukla,NP,South Asia,27.6869,86.7297
+np_namche,Namche Bazaar,NP,South Asia,27.8053,86.7140
+np_dingboche,Dingboche,NP,South Asia,27.8920,86.8314
+bt_phuentsholing,Phuentsholing,BT,South Asia,26.8516,89.3884
+bt_punakha,Punakha,BT,South Asia,27.5910,89.8774
+bt_paro,Paro,BT,South Asia,27.4287,89.4164
+bt_thimphu,Thimphu,BT,South Asia,27.4728,89.6393
+bt_chele_la,Chele La,BT,South Asia,27.3697,89.3461
+bd_dhaka,Dhaka,BD,South Asia,23.8103,90.4125
+bd_chattogram,Chattogram,BD,South Asia,22.3569,91.7832
+bd_sylhet,Sylhet,BD,South Asia,24.8949,91.8687
+bd_rangamati,Rangamati,BD,South Asia,22.7324,92.2985
+bd_sajek,Sajek,BD,South Asia,23.3819,92.2938
+mm_yangon,Yangon,MM,Southeast Asia,16.8409,96.1735
+mm_mandalay,Mandalay,MM,Southeast Asia,21.9588,96.0891
+mm_kalaw,Kalaw,MM,Southeast Asia,20.6333,96.5667
+mm_taunggyi,Taunggyi,MM,Southeast Asia,20.7888,97.0337
+mm_hakha,Hakha,MM,Southeast Asia,22.6445,93.6108
+th_bangkok,Bangkok,TH,Southeast Asia,13.7563,100.5018
+th_phuket,Phuket,TH,Southeast Asia,7.8804,98.3923
+th_chiang_mai,Chiang Mai,TH,Southeast Asia,18.7883,98.9853
+th_chiang_rai,Chiang Rai,TH,Southeast Asia,19.9105,99.8406
+th_mae_hong_son,Mae Hong Son,TH,Southeast Asia,19.3020,97.9654
+th_khao_kho,Khao Kho,TH,Southeast Asia,16.6346,100.9950
+th_doi_inthanon,Doi Inthanon,TH,Southeast Asia,18.5883,98.4867
+vn_hanoi,Hanoi,VN,Southeast Asia,21.0278,105.8342
+vn_da_nang,Da Nang,VN,Southeast Asia,16.0544,108.2022
+vn_da_lat,Da Lat,VN,Southeast Asia,11.9404,108.4583
+vn_sa_pa,Sa Pa,VN,Southeast Asia,22.3364,103.8438
+vn_fansipan,Fansipan,VN,Southeast Asia,22.3033,103.7750
+la_vientiane,Vientiane,LA,Southeast Asia,17.9757,102.6331
+la_luang_prabang,Luang Prabang,LA,Southeast Asia,19.8833,102.1333
+la_phonsavan,Phonsavan,LA,Southeast Asia,19.4500,103.2167
+la_paksong,Paksong,LA,Southeast Asia,15.1817,106.2300
+kh_phnom_penh,Phnom Penh,KH,Southeast Asia,11.5564,104.9282
+kh_sen_monorom,Sen Monorom,KH,Southeast Asia,12.4558,107.1881
+kh_bokor,Bokor,KH,Southeast Asia,10.6280,104.0280
+my_george_town,George Town,MY,Southeast Asia,5.4141,100.3288
+my_cameron_highlands,Cameron Highlands,MY,Southeast Asia,4.4700,101.3760
+my_genting,Genting Highlands,MY,Southeast Asia,3.4239,101.7932
+id_medan,Medan,ID,Southeast Asia,3.5952,98.6722
+id_berastagi,Berastagi,ID,Southeast Asia,3.1947,98.5089
+sg_singapore,Singapore,SG,Southeast Asia,1.3521,103.8198

@@ -10,17 +10,18 @@ requires-python = ">=3.11"
 dependencies = [
   "pandas>=2.2,<3",
   "pyarrow>=17,<22",
-  "requests-cache>=1.2,<2",
-  "tenacity>=9,<10",
+  "requests>=2.32,<3",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8,<9", "responses>=0.25,<1", "ruff>=0.9,<1"]
+dev = ["pytest>=8,<9", "ruff>=0.9,<1"]
 dashboard = ["streamlit>=1.45,<2", "plotly>=6,<7"]
+explorer = ["fastapi>=0.115,<1", "uvicorn>=0.34,<1", "httpx>=0.28,<1", "openai>=2,<3"]
 analysis = ["pyspark==4.0.1"]
+notebook = ["marimo>=0.20,<1", "plotly>=6,<7", "altair>=6,<7"]
 
 [project.scripts]
-big-weather = "weather_ingest.cli:main"
+big-weather = "weather_ingest.study:main"
 weather-analysis = "weather_analysis.cli:main"
 
 [tool.setuptools]
@@ -36,3 +37,6 @@ markers = ["integration: starts real local Spark subprocesses (requires analysis
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+
+[tool.ruff.lint.per-file-ignores]
+"notebooks/relationships/*.py" = ["PLR1711"]

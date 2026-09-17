@@ -4,7 +4,6 @@ from datetime import date
 
 import pandas as pd
 import pytest
-
 from weather_analysis.storage import publish
 
 
@@ -107,3 +106,27 @@ def published(tmp_path):
     root = tmp_path / "platform"
     publish(source, root, "test-v1")
     return source, root
+
+
+@pytest.fixture
+def raw_preview(tmp_path):
+    import json
+
+    root = tmp_path / 'regional'
+    chunk = root / 'raw/weather/location_id=hill/year=2024'
+    chunk.mkdir(parents=True)
+    timestamps = pd.date_range('2024-01-01', periods=47, freq='h', tz='UTC')
+    pd.DataFrame({'timestamp': timestamps, 'temperature_2m': 20., 'precipitation': 1.,
+                  'wind_speed_10m': 2.}).to_parquet(chunk / 'weather.parquet')
+    (chunk / '_source.json').write_text(json.dumps({'request': {
+        'location_id': 'hill', 'start': '2024-01-01', 'end': '2024-01-02', 'year': 2024,
+    }}))
+    location_dir = root / 'raw/locations'
+    location_dir.mkdir()
+    pd.DataFrame([{'location_id': 'hill', 'name': 'Hill'}]).to_parquet(
+        location_dir / 'locations.parquet')
+    (root / 'ingestion-status.json').write_text(json.dumps({
+        'status': 'paused', 'completed_chunks': 1, 'expected_chunks': 600,
+        'completed_rows': 47, 'reason': 'Waiting for API quota',
+    }))
+    return root

@@ -1,0 +1,32 @@
+    scope             variable   n   pearson             p  spearman   spearman_p
+ Regional       temperature_2m 100 -0.980580  3.810203e-71 -0.943400 9.069686e-49
+ Regional        precipitation 100  0.337007  6.067635e-04  0.405280 2.879369e-05
+ Regional       wind_speed_10m 100 -0.505524  8.117670e-08 -0.579268 2.721040e-10
+ Regional relative_humidity_2m 100  0.418055  1.505237e-05  0.490387 2.230100e-07
+ Regional     surface_pressure 100 -0.997886 3.644944e-118 -0.989776 1.050541e-84
+ Regional          cloud_cover 100  0.312162  1.568117e-03  0.344944 4.404352e-04
+ Regional  shortwave_radiation 100 -0.229395  2.168674e-02 -0.297613 2.636922e-03
+Sri Lanka       temperature_2m  30 -0.964996  8.195024e-18 -0.905387 6.274331e-12
+Sri Lanka        precipitation  30  0.285316  1.264362e-01  0.290589 1.192749e-01
+Sri Lanka       wind_speed_10m  30 -0.530612  2.557282e-03 -0.626450 2.126430e-04
+Sri Lanka relative_humidity_2m  30  0.231826  2.176933e-01  0.123094 5.169609e-01
+Sri Lanka     surface_pressure  30 -0.999509  1.160659e-43 -0.980746 2.095571e-21
+Sri Lanka          cloud_cover  30  0.515081  3.583338e-03  0.502677 4.639940e-03
+Sri Lanka  shortwave_radiation  30 -0.128958  4.970330e-01 -0.143399 4.496649e-01
+                 variant  sites      mae_m       r2  baseline_mae_m
+    All weather features    100  63.114870 0.985540      919.414233
+Without surface pressure    100 147.034407 0.963116      919.414233
+                 variant              feature  mae_increase_m  split_importance  fold_sd_m
+    All weather features          cloud_cover        0.041455          0.001915   0.599090
+    All weather features        precipitation       -0.337286          0.000588   0.500381
+    All weather features relative_humidity_2m       -0.288278          0.000587   0.384105
+    All weather features  shortwave_radiation       -0.085628          0.001123   0.557820
+    All weather features     surface_pressure      767.063627          0.693089 184.656044
+    All weather features       temperature_2m      238.188534          0.302215  35.026932
+    All weather features       wind_speed_10m        0.446429          0.000482   0.612853
+Without surface pressure          cloud_cover        2.585949          0.005305   1.146639
+Without surface pressure        precipitation       -0.199694          0.001432   1.321368
+Without surface pressure relative_humidity_2m        1.050804          0.002819   1.035961
+Without surface pressure  shortwave_radiation       -0.956132          0.002318   2.115533
+Without surface pressure       temperature_2m      957.134112          0.985666 204.102086
+Without surface pressure       wind_speed_10m        6.464003          0.002459   6.630433

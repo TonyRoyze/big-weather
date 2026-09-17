@@ -1,7 +1,0 @@
-{
-  "name": "Annual precipitation by location",
-  "source": "enriched_weather",
-  "filters": {},
-  "group_by": ["location_id", "year"],
-  "aggregations": {"precipitation": ["sum", "count"], "wind_speed_10m": ["avg", "max"]}
-}

@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "checks": [
+    "source hashes",
+    "balanced complete panel",
+    "unique keys",
+    "aggregation reconciliation",
+    "independent correlation and slope",
+    "complete historical years",
+    "strict temporal holdout",
+    "baseline RMSE",
+    "constant-feature importance",
+    "chronological tuning folds",
+    "Spark parity"
+  ]
+}

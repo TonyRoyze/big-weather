@@ -1,13 +1,21 @@
 """Run with `make dashboard`. Extend the page functions without importing Spark."""
 
+import json
 import os
+from datetime import timedelta
 from pathlib import Path
+from time import perf_counter
 
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-
 from weather_analysis import AnalysisService, DatasetStore
+from weather_analysis.charts import (
+    METRIC_LABELS,
+    load_chart_data,
+    load_preview_data,
+    preview_catalog,
+)
 from weather_analysis.spec import BANDS, GROUPS, METRICS, OPERATIONS, SEASONS
 
 st.set_page_config(page_title="Big Weather", page_icon="🌦", layout="wide")
@@ -33,6 +41,76 @@ def overview(store):
     st.info(
         "These selected locations describe the study sample; they are not a representative global sample."
     )
+
+
+@st.cache_data(show_spinner=False, max_entries=64, ttl=3600)
+def read_chart(root, version, fingerprint, locations, start, end, metrics):
+    return load_chart_data(DatasetStore(root, version), locations, start, end, metrics)
+
+
+def on_demand_charts(store):
+    st.header("On-demand charts")
+    st.write("Slide to a date range, choose locations, then load your charts. Drag a chart to pan.")
+    fingerprint = store.manifest["fingerprint"]
+    locations = read_table(str(store.root), store.version, fingerprint, "locations")
+    names = dict(zip(locations.location_id, locations.name))
+    coverage = store.manifest["coverage"]
+    start = pd.Timestamp(coverage["start"]).date()
+    end = pd.Timestamp(coverage["end"]).date()
+    with st.form("chart_request"):
+        selected = st.multiselect(
+            "Chart locations (up to 10)", sorted(names), default=sorted(names)[:1],
+            format_func=lambda value: names[value], max_selections=10,
+        )
+        metrics = st.multiselect(
+            "Chart metrics", list(METRIC_LABELS), default=list(METRIC_LABELS)[:2],
+            format_func=METRIC_LABELS.get,
+        )
+        if start < end:
+            dates = st.slider(
+                "Requested dates (UTC)", min_value=start, max_value=end,
+                value=(max(start, end - timedelta(days=89)), end), step=timedelta(days=1),
+            )
+        else:
+            dates = (start, end)
+            st.caption(f"Available date: {start}")
+        submitted = st.form_submit_button("Load charts")
+    state_key = f"chart-request-{store.version}-{fingerprint}"
+    if submitted:
+        if not selected or not metrics:
+            st.warning("Choose at least one location and metric.")
+            return
+        st.session_state[state_key] = (tuple(sorted(selected)), dates, tuple(sorted(metrics)))
+    if state_key not in st.session_state:
+        st.info("Choose your range and click Load charts to request data.")
+        return
+    selected, dates, metrics = st.session_state[state_key]
+    started = perf_counter()
+    with st.spinner("Loading selected weather data…"):
+        frame, rows, bucket_days = read_chart(
+            str(store.root), store.version, fingerprint, selected, *dates, metrics,
+        )
+    st.caption(
+        f"Loaded request: {dates[0]} to {dates[1]} · {rows:,} location-days · "
+        f"{len(frame):,} plotted rows · {perf_counter() - started:.3f}s query/cache retrieval. "
+        "Change controls and click Load charts to update."
+    )
+    if frame.empty:
+        st.info("No observations match this request.")
+        return
+    if bucket_days > 1:
+        st.caption(
+            f"Charts show {bucket_days}-day means of available daily values; rainfall is a "
+            "mean daily total. Request a shorter range for daily detail."
+        )
+    frame["Location"] = frame.location_id.map(names)
+    for metric in metrics:
+        fig = px.line(frame, x="date", y=metric, color="Location",
+                      labels={"date": "Date (UTC)", metric: METRIC_LABELS[metric]})
+        fig.update_layout(dragmode="pan", hovermode="x unified")
+        fig.update_xaxes(rangeslider_visible=True)
+        st.plotly_chart(fig, use_container_width=True, config={"scrollZoom": True}, key=metric)
+    st.caption("Chart sliders zoom within the loaded request. Data source: published study snapshot.")
 
 
 def exploration(store):
@@ -272,6 +350,83 @@ def history(service):
     show_result(service, selected)
 
 
+def evidence(store):
+    st.header("Evidence views")
+    st.write(
+        "Explore the published annual-change and elevation lapse-rate outputs. "
+        "These are descriptive associations, not causal estimates."
+    )
+    fingerprint = store.manifest["fingerprint"]
+    yearly = read_table(str(store.root), store.version, fingerprint, "yearly_metrics")
+    lapse = read_table(str(store.root), store.version, fingerprint, "lapse_rates")
+    tab1, tab2 = st.tabs(["Annual temperature", "Seasonal lapse rates"])
+    with tab1:
+        locations = sorted(yearly.location_id.unique())
+        selected = st.multiselect("Locations", locations, default=locations)
+        subset = yearly[yearly.location_id.isin(selected)].copy()
+        if subset.empty:
+            st.info("No annual metrics match the selected locations.")
+        else:
+            subset["year"] = subset["year"].astype(str)
+            st.plotly_chart(
+                px.line(
+                    subset.sort_values("year"),
+                    x="year",
+                    y="annual_avg_temperature_c",
+                    color="location_id",
+                    markers=True,
+                    labels={
+                        "year": "Year",
+                        "annual_avg_temperature_c": "Annual mean temperature (°C)",
+                        "location_id": "Location",
+                    },
+                ),
+                use_container_width=True,
+            )
+            st.plotly_chart(
+                px.bar(
+                    subset.dropna(subset=["temperature_yoy_change_c"]),
+                    x="year",
+                    y="temperature_yoy_change_c",
+                    color="location_id",
+                    barmode="group",
+                    labels={
+                        "year": "Year",
+                        "temperature_yoy_change_c": "Year-over-year change (°C)",
+                        "location_id": "Location",
+                    },
+                ),
+                use_container_width=True,
+            )
+            st.caption(
+                "Year-over-year change compares each location with its previous observed year; "
+                "it is not a climate-normal anomaly."
+            )
+            st.dataframe(subset, hide_index=True)
+    with tab2:
+        if lapse.empty:
+            st.info("No lapse-rate model could be fitted for this dataset.")
+        else:
+            st.plotly_chart(
+                px.bar(
+                    lapse.sort_values("season"),
+                    x="season",
+                    y="lapse_rate_c_per_km",
+                    labels={
+                        "season": "Local season",
+                        "lapse_rate_c_per_km": "Temperature slope (°C/km)",
+                    },
+                    hover_data=["r2", "rmse_c", "sample_size"],
+                ),
+                use_container_width=True,
+            )
+            st.caption(
+                "A negative value indicates lower modeled temperature at higher elevation. "
+                "Repeated daily observations and geography limit causal interpretation."
+            )
+            st.dataframe(lapse, hide_index=True)
+
+
 def pipeline(store, service):
     st.header("Pipeline evidence")
     st.write(
@@ -293,31 +448,113 @@ def pipeline(store, service):
         st.json(store.manifest)
 
 
+def download_preview(root):
+    st.header("Regional study download")
+    status_path = root / "ingestion-status.json"
+    if status_path.exists():
+        status = json.loads(status_path.read_text())
+        done, total = status.get("completed_chunks", 0), status.get("expected_chunks", 600)
+        a, b, c = st.columns(3)
+        a.metric("Completed downloads", f"{done} / {total}")
+        b.metric("Downloaded hourly rows", f"{status.get('completed_rows', 0):,}")
+        c.metric("Download status", status.get("status", "unknown").capitalize())
+        st.progress(min(1.0, done / total) if total else 0.0)
+        if window := status.get("active_window"):
+            st.caption(
+                f"Current window: {window['start']} to {window['end']} · "
+                f"{window['completed_locations']} / {window['total_locations']} locations"
+            )
+        if status.get("reason"):
+            st.caption(status["reason"])
+    st.button("Refresh download progress")
+    chunks = preview_catalog(root)
+    if not chunks:
+        st.info("No completed downloads are available to preview yet.")
+        st.code("make ingest-all\nmake process\nmake publish")
+        return
+    st.warning(
+        "Unpublished preview — incomplete study and raw data. These charts are for early "
+        "inspection, not final findings. Published analyses become available after processing."
+    )
+    locations = pd.read_parquet(root / "raw/locations")
+    names = dict(zip(locations.location_id, locations.name))
+    available = sorted({c["location_id"] for c in chunks})
+    selected = st.multiselect("Preview locations", available, default=available[:1],
+                              format_func=lambda value: names.get(value, value), max_selections=10)
+    if not selected:
+        st.info("Choose a location to preview.")
+        return
+    chosen = [c for c in chunks if c["location_id"] in selected]
+    first = min(pd.Timestamp(c["start"]).date() for c in chosen)
+    last = max(pd.Timestamp(c["end"]).date() for c in chosen)
+    with st.form("preview_request"):
+        dates = st.date_input("Preview dates (UTC; up to 93 days)",
+                              (max(first, last - timedelta(days=29)), last),
+                              min_value=first, max_value=last)
+        metric = st.selectbox("Preview metric", list(METRIC_LABELS)[:3],
+                              format_func=METRIC_LABELS.get)
+        submitted = st.form_submit_button("Load preview")
+    if submitted:
+        if len(dates) != 2:
+            st.warning("Select a start and end date.")
+            return
+        try:
+            with st.spinner("Reading completed downloads…"):
+                frame = load_preview_data(chosen, selected, *dates, metric)
+        except ValueError as exc:
+            st.warning(str(exc))
+            return
+        if frame.empty:
+            st.info("No downloaded observations match this request. Try another date or location.")
+            return
+        frame["Location"] = frame.location_id.map(names)
+        st.plotly_chart(px.line(frame, x="date", y=metric, color="Location", markers=True,
+                               labels={"date": "Date (UTC)", metric: METRIC_LABELS[metric]}),
+                        use_container_width=True)
+        st.caption("Daily values require 24 non-null hourly readings. Missing downloads are not zeros.")
+        st.dataframe(frame, hide_index=True)
+    with st.expander("Finish the study"):
+        st.write("Once ingestion is complete, process and publish the regional study, then refresh this page.")
+        st.code("make process\nmake publish")
+
+
 def main():
     st.title("Big Weather")
-    root = Path(os.getenv("WEATHER_PLATFORM_ROOT", "data/platform"))
+    project_root = Path(__file__).resolve().parents[1]
+    root = Path(os.getenv("WEATHER_PLATFORM_ROOT", str(project_root / "data/platform")))
+    regional_root = Path(os.getenv("WEATHER_REGIONAL_ROOT",
+                                   str(project_root / "data/regional-2020-2025")))
     try:
         store = DatasetStore(root)
         service = AnalysisService(root, store.version)
     except (FileNotFoundError, ValueError) as exc:
         st.info(str(exc))
-        st.code("make install-team\nmake process\nmake publish\nmake dashboard")
+        try:
+            download_preview(regional_root)
+        except (OSError, ValueError, KeyError) as preview_error:
+            st.error(f"Unable to read download progress: {preview_error}")
+            st.code("make ingest-all\nmake process\nmake publish")
         return
     st.caption(
         f"Dataset {store.version} · {store.manifest['coverage']['start'][:10]} to "
         f"{store.manifest['coverage']['end'][:10]}"
     )
     page = st.sidebar.radio(
-        "Navigate", ["Overview", "Exploration", "Custom analysis", "Job history", "Pipeline"]
+        "Navigate",
+        ["Overview", "On-demand charts", "Exploration", "Evidence", "Custom analysis", "Job history", "Pipeline"],
     )
     if page == "Overview":
         overview(store)
+    elif page == "On-demand charts":
+        on_demand_charts(store)
     elif page == "Exploration":
         exploration(store)
     elif page == "Custom analysis":
         custom_analysis(service)
     elif page == "Job history":
         history(service)
+    elif page == "Evidence":
+        evidence(store)
     else:
         pipeline(store, service)
     st.divider()

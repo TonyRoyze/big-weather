@@ -1,0 +1,32 @@
+version: 2
+sources:
+  - name: weather_raw
+    database: "{{ env_var('SNOWFLAKE_RAW_DATABASE', 'BIG_WEATHER_DEV') }}"
+    schema: RAW
+    tables:
+      - name: weather_hourly
+        description: Append-only committed source rows; UTC timestamp_ntz and immutable load provenance.
+        columns:
+          - name: location_id
+            data_tests: [not_null]
+          - name: observed_at
+            data_tests: [not_null]
+          - name: loaded_at
+            data_tests: [not_null]
+          - name: source_file
+            data_tests: [not_null]
+          - name: source_row_number
+            data_tests: [not_null]
+          - name: source_checksum
+            data_tests: [not_null]
+      - name: locations
+        description: One current row per configured study location, loaded with verified DEM elevation.
+        columns:
+          - name: location_id
+            data_tests: [not_null, unique]
+          - name: elevation_m
+            data_tests: [not_null]
+          - name: latitude
+            data_tests: [not_null]
+          - name: longitude
+            data_tests: [not_null]

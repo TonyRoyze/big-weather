@@ -1,0 +1,85 @@
+lk_batticaloa 1
+lk_batticaloa 2
+lk_batticaloa 3
+lk_batticaloa 4
+lk_batticaloa 5
+lk_batticaloa 6
+lk_batticaloa 7
+lk_batticaloa 8
+lk_batticaloa 9
+lk_batticaloa 10
+lk_batticaloa 11
+lk_batticaloa 12
+lk_colombo 1
+lk_colombo 2
+lk_colombo 3
+lk_colombo 4
+lk_colombo 5
+lk_colombo 6
+lk_colombo 7
+lk_colombo 8
+lk_colombo 9
+lk_colombo 10
+lk_colombo 11
+lk_colombo 12
+lk_galle 1
+lk_galle 2
+lk_galle 3
+lk_galle 4
+lk_galle 5
+lk_galle 6
+lk_galle 7
+lk_galle 8
+lk_galle 9
+lk_galle 10
+lk_galle 11
+lk_galle 12
+lk_jaffna 1
+lk_jaffna 2
+lk_jaffna 3
+lk_jaffna 4
+lk_jaffna 5
+lk_jaffna 6
+lk_jaffna 7
+lk_jaffna 8
+lk_jaffna 9
+lk_jaffna 10
+lk_jaffna 11
+lk_jaffna 12
+lk_matara 1
+lk_matara 2
+lk_matara 3
+lk_matara 4
+lk_matara 5
+lk_matara 6
+lk_matara 7
+lk_matara 8
+lk_matara 9
+lk_matara 10
+lk_matara 11
+lk_matara 12
+lk_trincomalee 1
+lk_trincomalee 2
+lk_trincomalee 3
+lk_trincomalee 4
+lk_trincomalee 5
+lk_trincomalee 6
+lk_trincomalee 7
+lk_trincomalee 8
+lk_trincomalee 9
+lk_trincomalee 10
+lk_trincomalee 11
+lk_trincomalee 12
+location_id  month       variable   level_F  level_p  spread_F  spread_p  level_p_holm  spread_p_holm
+  lk_matara      1 temperature_2m 39.194988   0.0002  0.737578    0.4694        0.0048         1.0000
+  lk_matara      2 temperature_2m 52.853018   0.0002  2.891679    0.2336        0.0048         1.0000
+  lk_matara      3 temperature_2m 49.912561   0.0002  3.404356    0.0058        0.0048         0.1102
+  lk_matara      4 temperature_2m 21.922343   0.0024  2.970338    0.0502        0.0480         0.7530
+  lk_matara      5 temperature_2m  5.069889   0.2732  1.556899    0.6560        1.0000         1.0000
+  lk_matara      6 temperature_2m  7.994206   0.0866  1.667861    0.3274        1.0000         1.0000
+  lk_matara      7 temperature_2m  4.812665   0.2962  1.058420    0.6136        1.0000         1.0000
+  lk_matara      8 temperature_2m 15.887688   0.0122  2.436112    0.3388        0.2074         1.0000
+  lk_matara      9 temperature_2m 18.403106   0.0076  1.621652    0.5846        0.1368         1.0000
+  lk_matara     10 temperature_2m 10.723621   0.0336  2.946846    0.3412        0.5376         1.0000
+  lk_matara     11 temperature_2m  2.972716   0.6142  2.621453    0.1564        1.0000         1.0000
+  lk_matara     12 temperature_2m 18.268419   0.0004  2.937436    0.2592        0.0084         1.0000

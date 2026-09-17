@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+<style>
+  body { margin: 0; background: #2D3849; }
+  a { color: #2D3849; }
+  a:hover { color: #5A6B82; }
+</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-screen-label="01" data-speaker-notes="Welcome. This project collects hourly weather for 100 fixed places in Sri Lanka and nearby Asia, joins it to elevation, and serves it through a map dashboard. Everything in this deck comes from the project report." style="background:#2D3849;color:#F3F0EB;font-family:Manrope,sans-serif;display:grid;grid-template-columns:1.08fr 0.92fr;">
+  <div style="padding:96px;display:flex;flex-direction:column;justify-content:center;gap:40px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(243,240,235,0.7);">Big Data Analytics · Project Presentation</div>
+    <h1 style="margin:0;font-family:Outfit,sans-serif;font-size:94px;font-weight:600;line-height:1.03;letter-spacing:-0.03em;">Geospatial Weather and Elevation Analysis</h1>
+    <p style="margin:0;font-size:32px;line-height:1.45;color:rgba(243,240,235,0.85);max-width:780px;">Six years of hourly weather for 100 fixed places in Sri Lanka and nearby South and Southeast Asia — collected, checked, and explored on a map.</p>
+    <div style="display:flex;gap:48px;font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(243,240,235,0.72);padding-top:20px;border-top:1px solid rgba(243,240,235,0.25);">
+      <span>{{ teamName }}</span>
+      <span>{{ courseName }}</span>
+      <span>Data snapshot: 16 Sep 2026</span>
+    </div>
+  </div>
+  <div style="position:relative;background-image:url('assets/hero-mist.jpeg');background-size:cover;background-position:center;">
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg,#2D3849 0%,rgba(45,56,73,0.6) 40%,rgba(45,56,73,0.28) 100%);"></div>
+  </div>
+</section>
+
+<section data-label="What We Cover" data-screen-label="02" data-speaker-notes="Four parts: the project and its data, the analysis and what it found, how the system is built, and what we conclude. Most of the time goes to part two." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:52px;">
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">Agenda</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:64px;font-weight:600;letter-spacing:-0.02em;">What we cover</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:28px;flex:1;align-content:center;">
+    <div style="background:#FFFFFF;border-radius:20px;padding:40px 34px;display:flex;flex-direction:column;gap:14px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:26px;color:rgba(45,56,73,0.55);">01</div><div style="font-family:Outfit,sans-serif;font-size:38px;font-weight:600;">Intro</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">The problem, our goals, and the data we used.</div></div>
+    <div style="background:#2D3849;color:#F3F0EB;border-radius:20px;padding:40px 34px;display:flex;flex-direction:column;gap:14px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:26px;color:rgba(243,240,235,0.6);">02</div><div style="font-family:Outfit,sans-serif;font-size:38px;font-weight:600;">Analysis &amp; findings</div><div style="font-size:26px;line-height:1.45;color:rgba(243,240,235,0.82);">How we processed the data and what it shows. Main part of the talk.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:40px 34px;display:flex;flex-direction:column;gap:14px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:26px;color:rgba(45,56,73,0.55);">03</div><div style="font-family:Outfit,sans-serif;font-size:38px;font-weight:600;">Architecture</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">How the system is built, and the tools we chose.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:40px 34px;display:flex;flex-direction:column;gap:14px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:26px;color:rgba(45,56,73,0.55);">04</div><div style="font-family:Outfit,sans-serif;font-size:38px;font-weight:600;">Final thoughts</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">What we conclude, what we could not finish, and next steps.</div></div>
+  </div>
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.6);">Every number in this deck comes from the project report and its saved validation logs.</div>
+</section>
+
+<section data-label="01 Intro" data-screen-label="03" data-speaker-notes="Part one: why we built this and what data sits underneath it." style="background:#2D3849;color:#F3F0EB;font-family:Manrope,sans-serif;display:grid;grid-template-columns:1fr 0.8fr;">
+  <div style="padding:96px;display:flex;flex-direction:column;justify-content:center;gap:28px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:170px;font-weight:400;color:rgba(243,240,235,0.28);line-height:1;">01</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:86px;font-weight:600;letter-spacing:-0.02em;">Intro</h2>
+    <p style="margin:0;font-size:30px;color:rgba(243,240,235,0.8);max-width:820px;">The problem, our goals, and the data.</p>
+    <div style="display:flex;gap:28px;padding-top:36px;font-family:'IBM Plex Mono',monospace;font-size:24px;">
+      <span style="padding:10px 22px;border-radius:999px;background:#F3F0EB;color:#2D3849;">01 INTRO</span>
+      <span style="padding:10px 22px;border-radius:999px;border:1px solid rgba(243,240,235,0.35);color:rgba(243,240,235,0.6);">02 ANALYSIS</span>
+      <span style="padding:10px 22px;border-radius:999px;border:1px solid rgba(243,240,235,0.35);color:rgba(243,240,235,0.6);">03 ARCHITECTURE</span>
+      <span style="padding:10px 22px;border-radius:999px;border:1px solid rgba(243,240,235,0.35);color:rgba(243,240,235,0.6);">04 FINAL</span>
+    </div>
+  </div>
+  <div style="position:relative;background-image:url('assets/hero-mist.jpeg');background-size:cover;background-position:center;">
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg,#2D3849 0%,rgba(45,56,73,0.55) 45%,rgba(45,56,73,0.3) 100%);"></div>
+  </div>
+</section>
+
+<section data-label="The Problem" data-screen-label="04" data-speaker-notes="Simple framing: the question is easy to ask, hard to answer honestly. The API caps each request, coverage is uneven, and reanalysis values are model estimates rather than station readings." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:grid;grid-template-columns:1fr 1fr;gap:72px;">
+  <div style="display:flex;flex-direction:column;gap:32px;justify-content:center;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">The problem</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:62px;font-weight:600;line-height:1.08;letter-spacing:-0.02em;">The question is simple. Getting a fair answer is not.</h2>
+    <p style="margin:0;font-size:30px;line-height:1.5;color:rgba(45,56,73,0.8);">We wanted to compare weather across 100 places and several years, and to see how it changes with height above sea level. That means millions of hourly records — and a download that stops halfway will quietly bend every average we calculate.</p>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.6);">So the data engineering is the project, not a side task.</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:24px;justify-content:center;">
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 36px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">The source limits each request</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">We cannot ask for the whole history at once, so data has to arrive in small windows that we track.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 36px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Coverage is uneven</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">Some Sri Lankan places have six full years. Many regional places only start in April or May 2026.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 36px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">The values are model estimates</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">Reanalysis data is not a weather station at each point, so our claims stay descriptive.</div></div>
+  </div>
+</section>
+
+<section data-label="Objectives" data-screen-label="05" data-speaker-notes="Six objectives, in plain terms: collect safely, keep one set of rules, store in a warehouse, serve small queries, check coverage before answering, and answer plain-English questions with visible workings." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:48px;">
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">Objectives</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:64px;font-weight:600;letter-spacing:-0.02em;">What we set out to build</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;align-content:start;">
+    <div style="background:#FFFFFF;border-radius:20px;padding:36px 34px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">01</div><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Collect without losing work</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">Downloads can stop and restart. We track what is already saved and how much request budget is left.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:36px 34px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">02</div><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Keep one set of rules</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">Keep the source as it came, then apply the same time and place rules everywhere.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:36px 34px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">03</div><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Organise a warehouse</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">Snowflake for storage, with dbt models kept in version control.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:36px 34px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">04</div><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Serve small, safe queries</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">FastAPI checks each request, then feeds a React and deck.gl map.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:36px 34px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">05</div><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Check coverage first</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">Tell the user what is missing, suggest what is possible, and offer to download the rest.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:36px 34px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">06</div><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Answer questions in plain English</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">Show the chart, the numbers, and the exact query behind the answer.</div></div>
+  </div>
+</section>
+
+<section data-label="Data Sources" data-screen-label="06" data-speaker-notes="Two sources and one catalogue. Open-Meteo ERA5-Seamless gives 47 hourly variables in UTC; Copernicus GLO-90 gives terrain height. The catalogue keeps requested coordinates separate from the grid values the source returns." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:grid;grid-template-columns:1fr 1.05fr;gap:64px;">
+  <div style="display:flex;flex-direction:column;gap:30px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">Data &amp; sources</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:60px;font-weight:600;letter-spacing:-0.02em;line-height:1.08;">Two sources, one list of places</h2>
+    <div style="display:flex;flex-direction:column;gap:22px;">
+      <div style="background:#FFFFFF;border-radius:20px;padding:30px 32px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">WEATHER · OPEN-METEO</div><div style="font-size:28px;line-height:1.45;">ERA5-Seamless reanalysis (ERA5 and ERA5-Land), hourly, timestamped in UTC.</div></div>
+      <div style="background:#FFFFFF;border-radius:20px;padding:30px 32px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">ELEVATION · COPERNICUS GLO-90</div><div style="font-size:28px;line-height:1.45;">Terrain height for every requested coordinate.</div></div>
+      <div style="background:#FFFFFF;border-radius:20px;padding:30px 32px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">LOCATION CATALOGUE</div><div style="font-size:28px;line-height:1.45;">Id, name, country, region, coordinates and elevation — kept separate from the grid values the source returns.</div></div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:28px;">
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;">
+      <div style="background:#2D3849;color:#F3F0EB;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:6px;"><div style="font-family:Outfit,sans-serif;font-size:58px;font-weight:600;">100</div><div style="font-size:24px;color:rgba(243,240,235,0.8);">places in 13 countries</div></div>
+      <div style="background:#2D3849;color:#F3F0EB;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:6px;"><div style="font-family:Outfit,sans-serif;font-size:58px;font-weight:600;">47</div><div style="font-size:24px;color:rgba(243,240,235,0.8);">weather values every hour</div></div>
+      <div style="background:#2D3849;color:#F3F0EB;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:6px;"><div style="font-family:Outfit,sans-serif;font-size:58px;font-weight:600;">3–4,321 m</div><div style="font-size:24px;color:rgba(243,240,235,0.8);">elevation range of the sites</div></div>
+      <div style="background:#2D3849;color:#F3F0EB;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:6px;"><div style="font-family:Outfit,sans-serif;font-size:58px;font-weight:600;">154.7 MB</div><div style="font-size:24px;color:rgba(243,240,235,0.8);">saved source files so far</div></div>
+    </div>
+    <div style="flex:1;min-height:220px;border-radius:20px;border:1px dashed rgba(45,56,73,0.45);background:repeating-linear-gradient(45deg,rgba(45,56,73,0.05) 0px,rgba(45,56,73,0.05) 10px,transparent 10px,transparent 20px);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.7);text-align:center;padding:24px;">[IMAGE PLACEHOLDER — MAP OF THE 100 STUDY SITES]</div>
+  </div>
+</section>
+
+<section data-label="What A Record Holds" data-screen-label="07" data-speaker-notes="Useful detail for the audience: one row is one place and one UTC hour, holding 47 values across temperature, humidity, rain, wind, pressure, cloud, soil, evapotranspiration and radiation. Nulls are kept as nulls." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:44px;">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:48px;">
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">The data itself</div>
+      <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:62px;font-weight:600;letter-spacing:-0.02em;">One row = one place, one hour</h2>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.6);text-align:right;white-space:nowrap;">Key: location id + UTC timestamp<br />Missing values stay empty, never zero</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;align-content:start;">
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">AIR</div><div style="font-size:28px;line-height:1.45;">Temperature and humidity measures</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">WATER</div><div style="font-size:28px;line-height:1.45;">Precipitation, snowfall and snow depth</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">MOVEMENT</div><div style="font-size:28px;line-height:1.45;">Wind speed and wind direction</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">ATMOSPHERE</div><div style="font-size:28px;line-height:1.45;">Pressure and cloud cover</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">GROUND</div><div style="font-size:28px;line-height:1.45;">Soil conditions and evapotranspiration</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">ENERGY</div><div style="font-size:28px;line-height:1.45;">Radiation measures</div></div>
+  </div>
+  <div style="display:flex;gap:40px;align-items:center;background:#2D3849;color:#F3F0EB;border-radius:20px;padding:30px 36px;">
+    <div style="font-family:Outfit,sans-serif;font-size:32px;font-weight:600;white-space:nowrap;">Why it matters</div>
+    <div style="font-size:26px;line-height:1.45;color:rgba(243,240,235,0.85);">Categories such as weather codes and wind direction cannot be averaged like temperature, so each variable needs its own rule before any chart is drawn.</div>
+  </div>
+</section>
+
+<section data-label="02 Analysis" data-screen-label="08" data-speaker-notes="Part two: the pipeline, the rules, the checks, and the findings. This is the heart of the talk." style="background:#2D3849;color:#F3F0EB;font-family:Manrope,sans-serif;padding:96px;display:flex;flex-direction:column;justify-content:center;gap:28px;">
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:170px;font-weight:400;color:rgba(243,240,235,0.28);line-height:1;">02</div>
+  <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:86px;font-weight:600;letter-spacing:-0.02em;">Analysis and findings</h2>
+  <p style="margin:0;font-size:30px;color:rgba(243,240,235,0.8);max-width:900px;">How the data was processed, and what it shows.</p>
+  <div style="display:flex;gap:28px;padding-top:36px;font-family:'IBM Plex Mono',monospace;font-size:24px;">
+    <span style="padding:10px 22px;border-radius:999px;border:1px solid rgba(243,240,235,0.35);color:rgba(243,240,235,0.6);">01 INTRO</span>
+    <span style="padding:10px 22px;border-radius:999px;background:#F3F0EB;color:#2D3849;">02 ANALYSIS</span>
+    <span style="padding:10px 22px;border-radius:999px;border:1px solid rgba(243,240,235,0.35);color:rgba(243,240,235,0.6);">03 ARCHITECTURE</span>
+    <span style="padding:10px 22px;border-radius:999px;border:1px solid rgba(243,240,235,0.35);color:rgba(243,240,235,0.6);">04 FINAL</span>
+  </div>
+</section>
+
+<section data-label="Pipeline" data-screen-label="09" data-speaker-notes="Five stages. Newest windows first, so every place gets recent data early instead of finishing one place at a time. Each saved chunk carries request metadata and a checksum so an interrupted run can resume." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:44px;">
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">Processing pipeline</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:62px;font-weight:600;letter-spacing:-0.02em;">Five stages from request to result</h2>
+  </div>
+  <div style="display:flex;align-items:stretch;gap:18px;margin:auto 0;">
+    <div style="flex:1;background:#FFFFFF;border-radius:20px;padding:38px 30px;display:flex;flex-direction:column;justify-content:flex-start;gap:16px;"><div style="display:flex;flex-direction:column;gap:14px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">01</div><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Ask the source</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">Request 47 hourly values per place from Open-Meteo, in UTC.</div></div><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.5);">API</div></div>
+    <div style="align-self:center;font-family:'IBM Plex Mono',monospace;font-size:32px;color:rgba(45,56,73,0.55);">→</div>
+    <div style="flex:1;background:#FFFFFF;border-radius:20px;padding:38px 30px;display:flex;flex-direction:column;justify-content:flex-start;gap:16px;"><div style="display:flex;flex-direction:column;gap:14px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">02</div><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Collect in windows</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">Seven days at a time, newest first, across all 100 places.</div></div><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.5);">QUOTA LEDGER</div></div>
+    <div style="align-self:center;font-family:'IBM Plex Mono',monospace;font-size:32px;color:rgba(45,56,73,0.55);">→</div>
+    <div style="flex:1;background:#FFFFFF;border-radius:20px;padding:38px 30px;display:flex;flex-direction:column;justify-content:flex-start;gap:16px;"><div style="display:flex;flex-direction:column;gap:14px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">03</div><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Save and check</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">Write Parquet chunks with metadata and a checksum, then test keys and ranges.</div></div><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.5);">RESUMABLE</div></div>
+    <div style="align-self:center;font-family:'IBM Plex Mono',monospace;font-size:32px;color:rgba(45,56,73,0.55);">→</div>
+    <div style="flex:1;background:#FFFFFF;border-radius:20px;padding:38px 30px;display:flex;flex-direction:column;justify-content:flex-start;gap:16px;"><div style="display:flex;flex-direction:column;gap:14px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">04</div><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Summarise by day</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">Only complete 24-hour days count. Averages for temperature and wind, totals for rain.</div></div><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.5);">24× SMALLER</div></div>
+    <div style="align-self:center;font-family:'IBM Plex Mono',monospace;font-size:32px;color:rgba(45,56,73,0.55);">→</div>
+    <div style="flex:1;background:#2D3849;color:#F3F0EB;border-radius:20px;padding:38px 30px;display:flex;flex-direction:column;justify-content:flex-start;gap:16px;"><div style="display:flex;flex-direction:column;gap:14px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(243,240,235,0.6);">05</div><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Serve and explore</div><div style="font-size:26px;line-height:1.45;color:rgba(243,240,235,0.82);">FastAPI returns checked results to the map, the history charts and Ask weather.</div></div><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(243,240,235,0.55);">COVERAGE + UNITS</div></div>
+  </div>
+</section>
+
+<section data-label="Rules We Applied" data-screen-label="10" data-speaker-notes="Four rules that protect the numbers. These are the difference between a chart and a trustworthy chart." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:44px;">
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">Rules we applied</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:62px;font-weight:600;letter-spacing:-0.02em;">Four rules that keep the numbers honest</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:28px;align-content:start;">
+    <div style="background:#FFFFFF;border-radius:20px;padding:36px 38px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Every hour exactly once</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">Each response must contain every expected hour, one time, with all requested fields — including empty ones.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:36px 38px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">A day needs all 24 hours</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">Incomplete days stay empty, so missing hours never look like a dry day.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:36px 38px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Coverage is counted, not assumed</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">We judge coverage from saved records. A missing recent month is not the same as a paused download.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:36px 38px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Every summary carries its count</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">Totals and means travel with the number of observations behind them, and 2026 is never called a full year.</div></div>
+  </div>
+</section>
+
+<section data-label="Comparable Window" data-screen-label="11" data-speaker-notes="The fairness step: to compare places we use the latest stretch of dates that all 100 places share, 5 May to 31 August 2026. Equal weight per place, all five core variables complete." style="background:#2D3849;color:#F3F0EB;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:40px;">
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(243,240,235,0.7);">Fair comparison</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:62px;font-weight:600;letter-spacing:-0.02em;">We compare only the dates every place shares</h2>
+  </div>
+  <div style="font-family:Outfit,sans-serif;font-size:118px;font-weight:600;line-height:1;letter-spacing:-0.03em;">5 May – 31 Aug 2026</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:28px;">
+    <div style="border-top:1px solid rgba(243,240,235,0.3);padding-top:22px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:Outfit,sans-serif;font-size:52px;font-weight:600;">119</div><div style="font-size:26px;color:rgba(243,240,235,0.8);">complete days</div></div>
+    <div style="border-top:1px solid rgba(243,240,235,0.3);padding-top:22px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:Outfit,sans-serif;font-size:52px;font-weight:600;">285,600</div><div style="font-size:26px;color:rgba(243,240,235,0.8);">hourly rows</div></div>
+    <div style="border-top:1px solid rgba(243,240,235,0.3);padding-top:22px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:Outfit,sans-serif;font-size:52px;font-weight:600;">11,900</div><div style="font-size:26px;color:rgba(243,240,235,0.8);">place-day records</div></div>
+    <div style="border-top:1px solid rgba(243,240,235,0.3);padding-top:22px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:Outfit,sans-serif;font-size:52px;font-weight:600;">24 / 24</div><div style="font-size:26px;color:rgba(243,240,235,0.8);">hours present, five core variables</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;">
+    <div style="background:rgba(243,240,235,0.08);border-radius:20px;padding:30px 32px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;">Full snapshot</div><div style="font-size:26px;line-height:1.45;color:rgba(243,240,235,0.85);">1,230,960 hourly rows in 1,901 saved files, 1 Jan 2020 to 31 Aug 2026 — but not complete for every place.</div></div>
+    <div style="background:rgba(243,240,235,0.08);border-radius:20px;padding:30px 32px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;">Two subsets</div><div style="font-size:26px;line-height:1.45;color:rgba(243,240,235,0.85);">30 Sri Lankan sites, and six coastal sites: Jaffna, Batticaloa, Trincomalee, Colombo, Matara, Galle.</div></div>
+    <div style="background:rgba(243,240,235,0.08);border-radius:20px;padding:30px 32px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;">Why it matters</div><div style="font-size:26px;line-height:1.45;color:rgba(243,240,235,0.85);">Without matched dates we would be comparing different seasons and different lengths of history.</div></div>
+  </div>
+</section>
+
+<section data-label="Data Quality" data-screen-label="12" data-speaker-notes="What the checks found: no duplicate keys, no rows lost or multiplied in the join, no values outside plausible bounds, and snow retained because mountain sites genuinely have it." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:grid;grid-template-columns:1.05fr 1fr;gap:64px;">
+  <div style="display:flex;flex-direction:column;gap:30px;justify-content:center;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">Data quality</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:60px;font-weight:600;letter-spacing:-0.02em;line-height:1.08;">Checked before it was used</h2>
+    <div style="display:flex;flex-direction:column;gap:20px;">
+      <div style="display:flex;gap:20px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:26px;color:rgba(45,56,73,0.6);">01</span><span style="font-size:28px;line-height:1.45;">No place and hour appears twice, across all 1,230,960 rows.</span></div>
+      <div style="display:flex;gap:20px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:26px;color:rgba(45,56,73,0.6);">02</span><span style="font-size:28px;line-height:1.45;">Joining the place list kept every row, with no unmatched places.</span></div>
+      <div style="display:flex;gap:20px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:26px;color:rgba(45,56,73,0.6);">03</span><span style="font-size:28px;line-height:1.45;">Fifteen range checks on the 47 weather fields found nothing out of range, so nothing was deleted.</span></div>
+      <div style="display:flex;gap:20px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:26px;color:rgba(45,56,73,0.6);">04</span><span style="font-size:28px;line-height:1.45;">A separate Spark run reproduced the same daily numbers.</span></div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:24px;justify-content:center;">
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px;display:flex;flex-direction:column;gap:6px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">TEMPERATURE SEEN</div><div style="font-family:Outfit,sans-serif;font-size:54px;font-weight:600;">−8.0 → 40.7 °C</div><div style="font-size:24px;color:rgba(45,56,73,0.72);">inside the comparison window</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px;display:flex;flex-direction:column;gap:6px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">LOWEST SURFACE PRESSURE</div><div style="font-family:Outfit,sans-serif;font-size:54px;font-weight:600;">599.8 hPa</div><div style="font-size:24px;color:rgba(45,56,73,0.72);">bounds allow both coast and mountain</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px;display:flex;flex-direction:column;gap:6px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">SNOW IN THE SAMPLE</div><div style="font-family:Outfit,sans-serif;font-size:54px;font-weight:600;">1,606 / 4,567</div><div style="font-size:24px;color:rgba(45,56,73,0.72);">hours with snowfall / snow depth — kept, not cleaned away</div></div>
+  </div>
+</section>
+
+<section data-label="Place Differences" data-screen-label="13" data-speaker-notes="Warmest to coolest: Chennai 31.04C, Madurai 30.68C, Batticaloa 30.44C, down to Dingboche 7.66C and Nathu La 6.27C. A spread of about 24.77C across the sampled places." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:40px;">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:48px;">
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">Differences between places</div>
+      <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:62px;font-weight:600;letter-spacing:-0.02em;">Warmest to coolest: a 24.77 °C gap</h2>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.6);text-align:right;white-space:nowrap;">Average temperature per place<br />5 May – 31 Aug 2026</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:56px;flex:1;">
+    <div style="display:flex;flex-direction:column;gap:22px;justify-content:center;">
+      <div style="display:flex;align-items:center;gap:20px;"><div style="width:250px;font-size:26px;">Chennai</div><div style="height:40px;width:100%;max-width:560px;background:#2D3849;border-radius:6px;"></div><div style="font-family:'IBM Plex Mono',monospace;font-size:26px;white-space:nowrap;">31.04 °C</div></div>
+      <div style="display:flex;align-items:center;gap:20px;"><div style="width:250px;font-size:26px;">Madurai</div><div style="height:40px;width:98.8%;max-width:553px;background:#2D3849;border-radius:6px;"></div><div style="font-family:'IBM Plex Mono',monospace;font-size:26px;white-space:nowrap;">30.68 °C</div></div>
+      <div style="display:flex;align-items:center;gap:20px;"><div style="width:250px;font-size:26px;">Batticaloa</div><div style="height:40px;width:98%;max-width:549px;background:#2D3849;border-radius:6px;"></div><div style="font-family:'IBM Plex Mono',monospace;font-size:26px;white-space:nowrap;">30.44 °C</div></div>
+      <div style="display:flex;align-items:center;gap:20px;"><div style="width:250px;font-size:26px;">Dingboche · 4,321 m</div><div style="height:40px;width:24.7%;max-width:138px;background:#8B99AD;border-radius:6px;"></div><div style="font-family:'IBM Plex Mono',monospace;font-size:26px;white-space:nowrap;">7.66 °C</div></div>
+      <div style="display:flex;align-items:center;gap:20px;"><div style="width:250px;font-size:26px;">Nathu La · 4,298 m</div><div style="height:40px;width:20.2%;max-width:113px;background:#8B99AD;border-radius:6px;"></div><div style="font-family:'IBM Plex Mono',monospace;font-size:26px;white-space:nowrap;">6.27 °C</div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:22px;justify-content:center;">
+      <div style="background:#FFFFFF;border-radius:20px;padding:30px 32px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">WETTEST PLACES, PERIOD TOTALS</div><div style="font-size:27px;line-height:1.45;">Lachen 3,387.2 mm, Sylhet 3,147.4 mm, Pokhara 3,108.1 mm. These are 119-day totals, not yearly figures.</div></div>
+      <div style="background:#FFFFFF;border-radius:20px;padding:30px 32px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">WINDIEST PLACES</div><div style="font-size:27px;line-height:1.45;">Jaffna 7.92 m/s, Mannar 7.79 m/s, Trincomalee 6.21 m/s — all in northern and eastern Sri Lanka.</div></div>
+      <div style="background:#FFFFFF;border-radius:20px;padding:30px 32px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">ALL PLACES POOLED</div><div style="font-size:27px;line-height:1.45;">22.80 °C, 83.11 % humidity, 2.47 m/s wind, 8.53 mm rain per full day.</div></div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Month By Month" data-screen-label="14" data-speaker-notes="Monthly means move in different directions by country: Bhutan's sampled sites warm from 15.73C to 19.19C while Cambodia's cool from 26.00C to 24.15C. May is partial, so four months cannot show a full season." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:40px;">
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">Change over time</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:62px;font-weight:600;letter-spacing:-0.02em;">Month by month, countries move differently</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:52px;flex:1;">
+    <div style="border-radius:20px;border:1px dashed rgba(45,56,73,0.45);background:repeating-linear-gradient(45deg,rgba(45,56,73,0.05) 0px,rgba(45,56,73,0.05) 10px,transparent 10px,transparent 20px);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.7);text-align:center;padding:24px;">[CHART PLACEHOLDER — MONTHLY MEAN TEMPERATURE BY COUNTRY<br />replicated_monthly_temperature.png]</div>
+    <div style="display:flex;flex-direction:column;gap:24px;justify-content:center;">
+      <div style="background:#FFFFFF;border-radius:20px;padding:30px 32px;display:flex;flex-direction:column;gap:6px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">BHUTAN · SAMPLED SITES</div><div style="font-family:Outfit,sans-serif;font-size:46px;font-weight:600;">15.73 → 19.19 °C</div><div style="font-size:24px;color:rgba(45,56,73,0.72);">warming from May to August</div></div>
+      <div style="background:#FFFFFF;border-radius:20px;padding:30px 32px;display:flex;flex-direction:column;gap:6px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">CAMBODIA · SAMPLED SITES</div><div style="font-family:Outfit,sans-serif;font-size:46px;font-weight:600;">26.00 → 24.15 °C</div><div style="font-size:24px;color:rgba(45,56,73,0.72);">cooling over the same months</div></div>
+      <div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.8);">May only covers 5–31 May. Four months cannot show a full seasonal cycle, and Sri Lankan monsoon labels do not fit every country.</div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Elevation" data-screen-label="15" data-speaker-notes="The main finding: higher places are colder, r = -0.981 across 100 sites and -0.965 within Sri Lanka. But across six coastal sites spanning seven metres the sign flips to +0.685 with p = 0.133 — the relationship needs elevation range to be visible." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:36px;">
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">Height and temperature</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:62px;font-weight:600;letter-spacing:-0.02em;">Higher places are colder — if the sample has height to compare</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1.1fr;gap:52px;flex:1;">
+    <div style="display:flex;flex-direction:column;gap:22px;justify-content:center;">
+      <div style="background:#FFFFFF;border-radius:20px;padding:32px 34px;display:grid;grid-template-columns:1.4fr 0.6fr 1fr 0.9fr;gap:0;font-size:26px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);padding-bottom:16px;border-bottom:1px solid rgba(45,56,73,0.18);">SAMPLE</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);padding-bottom:16px;border-bottom:1px solid rgba(45,56,73,0.18);">SITES</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);padding-bottom:16px;border-bottom:1px solid rgba(45,56,73,0.18);">HEIGHT (m)</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);padding-bottom:16px;border-bottom:1px solid rgba(45,56,73,0.18);">r</div>
+        <div style="padding:20px 0;border-bottom:1px solid rgba(45,56,73,0.12);">All regional sites</div>
+        <div style="padding:20px 0;border-bottom:1px solid rgba(45,56,73,0.12);font-family:'IBM Plex Mono',monospace;">100</div>
+        <div style="padding:20px 0;border-bottom:1px solid rgba(45,56,73,0.12);font-family:'IBM Plex Mono',monospace;">3–4,321</div>
+        <div style="padding:20px 0;border-bottom:1px solid rgba(45,56,73,0.12);font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:500;">−0.981</div>
+        <div style="padding:20px 0;border-bottom:1px solid rgba(45,56,73,0.12);">Sri Lanka</div>
+        <div style="padding:20px 0;border-bottom:1px solid rgba(45,56,73,0.12);font-family:'IBM Plex Mono',monospace;">30</div>
+        <div style="padding:20px 0;border-bottom:1px solid rgba(45,56,73,0.12);font-family:'IBM Plex Mono',monospace;">3–2,500</div>
+        <div style="padding:20px 0;border-bottom:1px solid rgba(45,56,73,0.12);font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:500;">−0.965</div>
+        <div style="padding:20px 0 0 0;">Coastal only</div>
+        <div style="padding:20px 0 0 0;font-family:'IBM Plex Mono',monospace;">6</div>
+        <div style="padding:20px 0 0 0;font-family:'IBM Plex Mono',monospace;">3–10</div>
+        <div style="padding:20px 0 0 0;font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:500;">+0.685</div>
+      </div>
+      <div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.8);">Seven metres of height is not enough to see the pattern: the coastal result is weak (p = 0.133) and points the other way. Rank correlation across the region is −0.943.</div>
+    </div>
+    <div style="border-radius:20px;border:1px dashed rgba(45,56,73,0.45);background:repeating-linear-gradient(45deg,rgba(45,56,73,0.05) 0px,rgba(45,56,73,0.05) 10px,transparent 10px,transparent 20px);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.7);text-align:center;padding:24px;">[CHART PLACEHOLDER — HEIGHT vs AVERAGE TEMPERATURE SCATTER<br />replicated_elevation_temperature.png]</div>
+  </div>
+</section>
+
+<section data-label="Methods" data-screen-label="16" data-speaker-notes="Four methods and the question each answers. We describe patterns; we did not train a forecasting model, so there are no model metrics." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:40px;">
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">How we analysed it</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:62px;font-weight:600;letter-spacing:-0.02em;">Four methods, one question each</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:28px;align-content:start;">
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 36px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Daily summaries</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">Average temperature and wind, total rain, only for complete days.</div><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.6);">Q: what did a normal day look like here?</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 36px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Correlation</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">Pearson and Spearman between height, latitude and average weather, over the same dates.</div><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.6);">Q: does weather change with height?</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 36px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Kruskal–Wallis test</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">11,322.14 for daily temperature and 4,650.22 for daily rain. The p-values are too small to print, not exactly zero.</div><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.6);">Q: do the places really differ?</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 36px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:Outfit,sans-serif;font-size:34px;font-weight:600;">Spark cross-check</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.75);">PySpark recomputed the same summaries independently and matched.</div><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.6);">Q: are our rules applied consistently?</div></div>
+  </div>
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.6);">No forecast model was trained, so this deck reports no accuracy metrics.</div>
+</section>
+
+<section data-label="Results" data-screen-label="17" data-speaker-notes="Headline numbers. Note the coastal rainfall contrast: Galle and Colombo receive well over Jaffna and Trincomalee, about 1.75 to 1.84 times, from 36 complete location-years." style="background:#2D3849;color:#F3F0EB;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:40px;">
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(243,240,235,0.7);">Results</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:62px;font-weight:600;letter-spacing:-0.02em;">The numbers behind the findings</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:26px;">
+    <div style="background:rgba(243,240,235,0.08);border-radius:20px;padding:34px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:Outfit,sans-serif;font-size:62px;font-weight:600;">−0.981</div><div style="font-size:26px;color:rgba(243,240,235,0.85);">height vs average temperature, 100 places</div></div>
+    <div style="background:rgba(243,240,235,0.08);border-radius:20px;padding:34px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:Outfit,sans-serif;font-size:62px;font-weight:600;">22.80 °C</div><div style="font-size:26px;color:rgba(243,240,235,0.85);">average hourly temperature over 119 days</div></div>
+    <div style="background:rgba(243,240,235,0.08);border-radius:20px;padding:34px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:Outfit,sans-serif;font-size:62px;font-weight:600;">8.53 mm</div><div style="font-size:26px;color:rgba(243,240,235,0.85);">average rain per complete day</div></div>
+    <div style="background:rgba(243,240,235,0.08);border-radius:20px;padding:34px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:Outfit,sans-serif;font-size:62px;font-weight:600;">−0.506</div><div style="font-size:26px;color:rgba(243,240,235,0.85);">height vs wind speed (Sri Lanka −0.531)</div></div>
+    <div style="background:rgba(243,240,235,0.08);border-radius:20px;padding:34px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:Outfit,sans-serif;font-size:62px;font-weight:600;">+0.337</div><div style="font-size:26px;color:rgba(243,240,235,0.85);">height vs rainfall, regional (p = 0.000607)</div></div>
+    <div style="background:rgba(243,240,235,0.08);border-radius:20px;padding:34px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:Outfit,sans-serif;font-size:62px;font-weight:600;">36</div><div style="font-size:26px;color:rgba(243,240,235,0.85);">complete coastal place-years, 2020–2025</div></div>
+  </div>
+  <div style="display:flex;gap:36px;align-items:center;border:1px solid rgba(243,240,235,0.28);border-radius:20px;padding:28px 34px;">
+    <div style="font-family:Outfit,sans-serif;font-size:32px;font-weight:600;white-space:nowrap;">Coastal rain, six-year averages</div>
+    <div style="font-size:26px;line-height:1.45;color:rgba(243,240,235,0.85);">Galle 2,770.9 mm and Colombo 2,728.1 mm, against Jaffna 1,502.7 mm and Trincomalee 1,556.2 mm — roughly 1.75–1.84 times more in the southwest. Matara sits at 2,249.7 mm.</div>
+  </div>
+</section>
+
+<section data-label="Key Findings" data-screen-label="18" data-speaker-notes="Four findings, each with its evidence and what it means. The second one is the methodological point examiners will care about." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:40px;">
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">Key findings</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:62px;font-weight:600;letter-spacing:-0.02em;">Four findings, with their evidence</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:28px;align-content:start;">
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 36px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:Outfit,sans-serif;font-size:33px;font-weight:600;line-height:1.2;">Height matters more than latitude</div><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.6);">r = −0.981 for height · r = −0.315 for latitude</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.78);">Across this region, how high a place sits explains its temperature better than how far north it is.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 36px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:Outfit,sans-serif;font-size:33px;font-weight:600;line-height:1.2;">The answer depends on the sample</div><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.6);">Coastal sites r = +0.685, p = 0.133, height 3–10 m</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.78);">Remove the height range and the relationship reverses, so any correlation must be reported with the sites behind it.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 36px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:Outfit,sans-serif;font-size:33px;font-weight:600;line-height:1.2;">Rain and wind follow weaker patterns</div><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.6);">Rain r = +0.337 regional, +0.285 (p = 0.126) in Sri Lanka · wind r = −0.506</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.78);">Height is not in control of everything: exposure, geography and season still matter.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 36px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:Outfit,sans-serif;font-size:33px;font-weight:600;line-height:1.2;">Sri Lanka's rain splits southwest to northeast</div><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.6);">Galle 2,770.9 mm vs Jaffna 1,502.7 mm · 36 complete place-years</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.78);">Yearly average temperature stays between 27.02 °C (2022) and 27.75 °C (2024), with no steady rise.</div></div>
+  </div>
+</section>
+
+<section data-label="03 Architecture" data-screen-label="19" data-speaker-notes="Part three: how the system is built, what runs today, and what is designed but not yet deployed." style="background:#2D3849;color:#F3F0EB;font-family:Manrope,sans-serif;padding:96px;display:flex;flex-direction:column;justify-content:center;gap:28px;">
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:170px;font-weight:400;color:rgba(243,240,235,0.28);line-height:1;">03</div>
+  <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:86px;font-weight:600;letter-spacing:-0.02em;">Project architecture</h2>
+  <p style="margin:0;font-size:30px;color:rgba(243,240,235,0.8);max-width:900px;">How the system fits together, and what runs today.</p>
+  <div style="display:flex;gap:28px;padding-top:36px;font-family:'IBM Plex Mono',monospace;font-size:24px;">
+    <span style="padding:10px 22px;border-radius:999px;border:1px solid rgba(243,240,235,0.35);color:rgba(243,240,235,0.6);">01 INTRO</span>
+    <span style="padding:10px 22px;border-radius:999px;border:1px solid rgba(243,240,235,0.35);color:rgba(243,240,235,0.6);">02 ANALYSIS</span>
+    <span style="padding:10px 22px;border-radius:999px;background:#F3F0EB;color:#2D3849;">03 ARCHITECTURE</span>
+    <span style="padding:10px 22px;border-radius:999px;border:1px solid rgba(243,240,235,0.35);color:rgba(243,240,235,0.6);">04 FINAL</span>
+  </div>
+</section>
+
+<section data-label="System Architecture" data-screen-label="20" data-speaker-notes="Six layers, left to right. Solid cards run locally today; the dashed card is the designed warehouse layer. The prototype uses Parquet with Arrow queries in place of Snowflake." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:80px 96px;display:flex;flex-direction:column;gap:36px;">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:40px;">
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">System architecture</div>
+      <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:58px;font-weight:600;letter-spacing:-0.02em;">Six layers, source to screen</h2>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.6);text-align:right;">Solid = running locally today<br />Dashed = designed, not yet deployed</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px;flex:1;align-content:center;">
+    <div style="background:#FFFFFF;border-radius:18px;padding:30px 24px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">SOURCE</div><div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;">Open-Meteo API</div><div style="font-size:24px;line-height:1.4;color:rgba(45,56,73,0.75);">Hourly weather and terrain height</div></div>
+    <div style="background:#FFFFFF;border-radius:18px;padding:30px 24px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">COLLECT</div><div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;">Scheduler and quota ledger</div><div style="font-size:24px;line-height:1.4;color:rgba(45,56,73,0.75);">One writer per study, saved checkpoints</div></div>
+    <div style="background:#FFFFFF;border-radius:18px;padding:30px 24px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">STORE</div><div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;">Saved files with provenance</div><div style="font-size:24px;line-height:1.4;color:rgba(45,56,73,0.75);">Parquet now, Snowflake RAW by design</div></div>
+    <div style="border-radius:18px;border:1px dashed rgba(45,56,73,0.5);padding:30px 24px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">TRANSFORM</div><div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;">dbt models to marts</div><div style="font-size:24px;line-height:1.4;color:rgba(45,56,73,0.75);">RAW → STAGING → INTERMEDIATE → MART</div></div>
+    <div style="background:#FFFFFF;border-radius:18px;padding:30px 24px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">SERVE</div><div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;">FastAPI query service</div><div style="font-size:24px;line-height:1.4;color:rgba(45,56,73,0.75);">Checks the request, returns coverage and units</div></div>
+    <div style="background:#2D3849;color:#F3F0EB;border-radius:18px;padding:30px 24px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(243,240,235,0.6);">EXPLORE</div><div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;">React, deck.gl, Ask weather</div><div style="font-size:24px;line-height:1.4;color:rgba(243,240,235,0.82);">Terrain colouring, playback, plain-English questions</div></div>
+  </div>
+  <div style="display:flex;gap:28px;align-items:center;background:#FFFFFF;border-radius:20px;padding:28px 34px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.6);white-space:nowrap;">SEPARATE JOBS</div>
+    <div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.8);">Collecting data and answering queries are different services. Asking a question does not fetch new data unless the user asks for the missing part.</div>
+  </div>
+</section>
+
+<section data-label="Coverage Loop" data-screen-label="21" data-speaker-notes="The designed coverage-aware loop: check coverage, then either answer, or estimate the missing work and offer fewer places or a shorter window, or queue the download. The prototype currently only queries data already saved." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:40px;">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:48px;">
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">Coverage-aware requests</div>
+      <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:58px;font-weight:600;letter-spacing:-0.02em;">What happens when the data is not there yet</h2>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.6);text-align:right;">Project requirement<br />not yet implemented</div>
+  </div>
+  <div style="display:flex;align-items:stretch;gap:16px;margin:auto 0;">
+    <div style="flex:1;background:#FFFFFF;border-radius:20px;padding:34px 28px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">01</div><div style="font-family:Outfit,sans-serif;font-size:32px;font-weight:600;">Select</div><div style="font-size:25px;line-height:1.45;color:rgba(45,56,73,0.75);">The user picks a weather feature, places and dates.</div></div>
+    <div style="align-self:center;font-family:'IBM Plex Mono',monospace;font-size:30px;color:rgba(45,56,73,0.55);">→</div>
+    <div style="flex:1;background:#FFFFFF;border-radius:20px;padding:34px 28px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">02</div><div style="font-family:Outfit,sans-serif;font-size:32px;font-weight:600;">Check coverage</div><div style="font-size:25px;line-height:1.45;color:rgba(45,56,73,0.75);">Compare the request against what is already saved.</div></div>
+    <div style="align-self:center;font-family:'IBM Plex Mono',monospace;font-size:30px;color:rgba(45,56,73,0.55);">→</div>
+    <div style="flex:1;background:#FFFFFF;border-radius:20px;padding:34px 28px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">03a</div><div style="font-family:Outfit,sans-serif;font-size:32px;font-weight:600;">Complete → answer</div><div style="font-size:25px;line-height:1.45;color:rgba(45,56,73,0.75);">Query and draw the map, with missing values shown as missing.</div></div>
+    <div style="align-self:center;font-family:'IBM Plex Mono',monospace;font-size:30px;color:rgba(45,56,73,0.55);">→</div>
+    <div style="flex:1;background:#FFFFFF;border-radius:20px;padding:34px 28px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">03b</div><div style="font-family:Outfit,sans-serif;font-size:32px;font-weight:600;">Incomplete → offer options</div><div style="font-size:25px;line-height:1.45;color:rgba(45,56,73,0.75);">Estimate the missing work, request cost and wait, then suggest fewer places or a shorter window.</div></div>
+    <div style="align-self:center;font-family:'IBM Plex Mono',monospace;font-size:30px;color:rgba(45,56,73,0.55);">→</div>
+    <div style="flex:1;background:#2D3849;color:#F3F0EB;border-radius:20px;padding:34px 28px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(243,240,235,0.6);">04</div><div style="font-family:Outfit,sans-serif;font-size:32px;font-weight:600;">Download and refresh</div><div style="font-size:25px;line-height:1.45;color:rgba(243,240,235,0.82);">Queue only the missing work, save and check it, clear stale caches, then rerun the analysis.</div></div>
+  </div>
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.6);">Source delays and exhausted request budgets are explained separately, so users know whether to wait or to narrow the question.</div>
+</section>
+
+<section data-label="Tech Stack" data-screen-label="22" data-speaker-notes="Only what the project actually uses. Snowflake was chosen for managed storage, separate compute and role-based access — not because the row count demands a cluster." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:40px;">
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">Technology stack</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:62px;font-weight:600;letter-spacing:-0.02em;">The tools, and why we picked them</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:26px;align-content:start;">
+    <div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">SOURCES</div><div style="font-size:27px;line-height:1.5;">Open-Meteo historical weather API<br />Copernicus GLO-90 elevation</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">PROCESSING</div><div style="font-size:27px;line-height:1.5;">Python<br />PySpark<br />Apache Arrow</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">STORAGE</div><div style="font-size:27px;line-height:1.5;">Parquet files (prototype)<br />Snowflake RAW → MART (design)</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">TRANSFORMATION</div><div style="font-size:27px;line-height:1.5;">dbt models and tests<br />Version-controlled releases</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">SERVING</div><div style="font-size:27px;line-height:1.5;">FastAPI<br />Streamlit dashboard<br />Codex or OpenAI API for Ask weather</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">FRONT END</div><div style="font-size:27px;line-height:1.5;">React<br />TypeScript<br />deck.gl terrain layers</div></div>
+  </div>
+  <div style="display:flex;gap:28px;align-items:center;background:#2D3849;color:#F3F0EB;border-radius:20px;padding:28px 34px;">
+    <div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;white-space:nowrap;">Why Snowflake and dbt</div>
+    <div style="font-size:26px;line-height:1.45;color:rgba(243,240,235,0.85);">Managed storage with compute that can be suspended and scaled, plus one shared definition of each rule instead of the same logic copied into several API handlers. The cost is cloud dependence, spend to monitor and roles to administer.</div>
+  </div>
+</section>
+
+<section data-label="Big Data View" data-screen-label="23" data-speaker-notes="Four dimensions we can defend, and one we cannot. Velocity is limited: batched windows and complete JSON responses, with no streaming pipeline implemented." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:40px;">
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">Big data view</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:62px;font-weight:600;letter-spacing:-0.02em;">Four dimensions we can defend, one we cannot</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:22px;flex:1;align-content:center;">
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 28px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:Outfit,sans-serif;font-size:38px;font-weight:600;">Volume</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.78);">1,230,960 hourly rows in 1,901 files, 154.7 MB, growing with every window.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 28px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:Outfit,sans-serif;font-size:38px;font-weight:600;">Variety</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.78);">47 weather values plus place details, terrain height and coverage records.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 28px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:Outfit,sans-serif;font-size:38px;font-weight:600;">Veracity</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.78);">Key checks, complete-hour checks, kept nulls, checksums and a second engine agreeing.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 28px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:Outfit,sans-serif;font-size:38px;font-weight:600;">Value</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.78);">Small safe queries, charts labelled with coverage, and plain-English answers.</div></div>
+    <div style="border-radius:20px;border:1px dashed rgba(45,56,73,0.5);padding:34px 28px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:Outfit,sans-serif;font-size:38px;font-weight:600;">Velocity</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.78);">Limited. Data arrives in seven-day batches and responses are complete JSON. No streaming pipeline was built.</div></div>
+  </div>
+</section>
+
+<section data-label="The Dashboard" data-screen-label="24" data-speaker-notes="What the user actually sees. Terrain height shapes the map, the chosen weather feature colours it, and the colour scale stays fixed during playback so times are comparable. Ask weather turns a typed question into a checked query." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:36px;">
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">What users see</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:58px;font-weight:600;letter-spacing:-0.02em;">A map you can question</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;flex:1;">
+    <div style="border-radius:20px;border:1px dashed rgba(45,56,73,0.45);background:repeating-linear-gradient(45deg,rgba(45,56,73,0.05) 0px,rgba(45,56,73,0.05) 10px,transparent 10px,transparent 20px);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.7);text-align:center;padding:24px;">[SCREENSHOT PLACEHOLDER — DECK.GL MAP DASHBOARD<br />img/dashboard.jpeg]</div>
+    <div style="border-radius:20px;border:1px dashed rgba(45,56,73,0.45);background:repeating-linear-gradient(45deg,rgba(45,56,73,0.05) 0px,rgba(45,56,73,0.05) 10px,transparent 10px,transparent 20px);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.7);text-align:center;padding:24px;">[SCREENSHOT PLACEHOLDER — ASK WEATHER PAGE<br />img/askweather.png]</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:26px;">
+    <div style="background:#FFFFFF;border-radius:20px;padding:28px 30px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;">Height shapes, weather colours</div><div style="font-size:25px;line-height:1.45;color:rgba(45,56,73,0.78);">Colours follow hills and valleys; gaps between samples stay unfilled.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:28px 30px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;">Playback you can trust</div><div style="font-size:25px;line-height:1.45;color:rgba(45,56,73,0.78);">Up to 100 places and 93 days per load, with the colour scale fixed across the window.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:28px 30px;display:flex;flex-direction:column;gap:8px;"><div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;">Questions with workings</div><div style="font-size:25px;line-height:1.45;color:rgba(45,56,73,0.78);">One feature, up to 100 places and 366 days; the answer shows the chart, the table and the exact query.</div></div>
+  </div>
+</section>
+
+<section data-label="Challenges" data-screen-label="25" data-speaker-notes="Honest limits. The Snowflake trial credits ran short, so the warehouse was simulated locally; the API cap reshaped the ingestion order; and the sites were chosen, not sampled at random." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:40px;">
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">Challenges &amp; limitations</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:62px;font-weight:600;letter-spacing:-0.02em;">What got in the way, and what it cost us</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:26px;align-content:start;">
+    <div style="background:#FFFFFF;border-radius:20px;padding:32px 34px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:Outfit,sans-serif;font-size:32px;font-weight:600;">Warehouse credits ran short</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.78);">The ~$400 Snowflake trial was not enough for the MVP, so we simulated the warehouse locally with Parquet, PySpark and versioned release metadata.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:32px 34px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:Outfit,sans-serif;font-size:32px;font-weight:600;">The API limits each request</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.78);">Full history for every place at once was impractical, so we took the newest windows first and left older data to be fetched on demand.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:32px 34px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:Outfit,sans-serif;font-size:32px;font-weight:600;">History is still uneven</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.78);">Outside the matched dates, coverage varies by place, so the regional study covers only 119 days of one part-season.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:32px 34px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:Outfit,sans-serif;font-size:32px;font-weight:600;">The places were chosen</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.78);">These are study sites, not a random sample, so country figures are not national averages.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:32px 34px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:Outfit,sans-serif;font-size:32px;font-weight:600;">Height is built into the source</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.78);">Open-Meteo uses elevation when it downscales and picks grid cells, so part of the pattern reflects how the data is made.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:32px 34px;display:flex;flex-direction:column;gap:10px;"><div style="font-family:Outfit,sans-serif;font-size:32px;font-weight:600;">Two requirements remain open</div><div style="font-size:26px;line-height:1.45;color:rgba(45,56,73,0.78);">Warehouse integration and coverage-aware on-demand downloads are designed but not yet built.</div></div>
+  </div>
+</section>
+
+<section data-label="04 Final" data-screen-label="26" data-speaker-notes="Part four: conclusions, where this could be used, and next steps." style="background:#2D3849;color:#F3F0EB;font-family:Manrope,sans-serif;padding:96px;display:flex;flex-direction:column;justify-content:center;gap:28px;">
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:170px;font-weight:400;color:rgba(243,240,235,0.28);line-height:1;">04</div>
+  <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:86px;font-weight:600;letter-spacing:-0.02em;">Final thoughts</h2>
+  <p style="margin:0;font-size:30px;color:rgba(243,240,235,0.8);max-width:900px;">What we conclude, where it helps, and what comes next.</p>
+  <div style="display:flex;gap:28px;padding-top:36px;font-family:'IBM Plex Mono',monospace;font-size:24px;">
+    <span style="padding:10px 22px;border-radius:999px;border:1px solid rgba(243,240,235,0.35);color:rgba(243,240,235,0.6);">01 INTRO</span>
+    <span style="padding:10px 22px;border-radius:999px;border:1px solid rgba(243,240,235,0.35);color:rgba(243,240,235,0.6);">02 ANALYSIS</span>
+    <span style="padding:10px 22px;border-radius:999px;border:1px solid rgba(243,240,235,0.35);color:rgba(243,240,235,0.6);">03 ARCHITECTURE</span>
+    <span style="padding:10px 22px;border-radius:999px;background:#F3F0EB;color:#2D3849;">04 FINAL</span>
+  </div>
+</section>
+
+<section data-label="Where It Helps" data-screen-label="27" data-speaker-notes="Practical uses that the current system genuinely supports: fair regional comparison, height-aware exploration, questions with visible workings, and reproducible evidence." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;display:grid;grid-template-columns:1fr 0.8fr;">
+  <div style="padding:88px 64px 88px 96px;display:flex;flex-direction:column;gap:32px;justify-content:center;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">Where it helps</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:58px;font-weight:600;letter-spacing:-0.02em;line-height:1.08;">What this is useful for today</h2>
+    <div style="display:flex;flex-direction:column;gap:22px;">
+      <div style="display:flex;gap:22px;align-items:flex-start;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);padding-top:6px;">01</div><div style="font-size:28px;line-height:1.45;">Comparing places over the same verified dates, with the record counts shown.</div></div>
+      <div style="display:flex;gap:22px;align-items:flex-start;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);padding-top:6px;">02</div><div style="font-size:28px;line-height:1.45;">Exploring weather against terrain height on a map, including snow at mountain sites.</div></div>
+      <div style="display:flex;gap:22px;align-items:flex-start;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);padding-top:6px;">03</div><div style="font-size:28px;line-height:1.45;">Answering typed questions with a chart, a table, coverage counts and the query used.</div></div>
+      <div style="display:flex;gap:22px;align-items:flex-start;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);padding-top:6px;">04</div><div style="font-size:28px;line-height:1.45;">Repeating any result later: dataset fingerprint, rules and validation logs are stored with each release.</div></div>
+    </div>
+  </div>
+  <div style="position:relative;background-image:url('assets/hero-mist.jpeg');background-size:cover;background-position:center;">
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg,#F3F0EB 0%,rgba(243,240,235,0.45) 40%,rgba(243,240,235,0.12) 100%);"></div>
+  </div>
+</section>
+
+<section data-label="Conclusions" data-screen-label="28" data-speaker-notes="Three beats: what we did, what we found, why it matters. Stay inside what the evidence supports." style="background:#2D3849;color:#F3F0EB;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:44px;">
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(243,240,235,0.7);">Conclusions</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:62px;font-weight:600;letter-spacing:-0.02em;">What we built, found, and can defend</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:36px;flex:1;align-content:center;">
+    <div style="display:flex;flex-direction:column;gap:14px;border-top:3px solid rgba(243,240,235,0.55);padding-top:26px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(243,240,235,0.7);">WHAT WE DID</div><div style="font-family:Outfit,sans-serif;font-size:36px;font-weight:600;line-height:1.2;">Built a pipeline that keeps track of itself</div><div style="font-size:26px;line-height:1.5;color:rgba(243,240,235,0.85);">1,230,960 checked hourly rows for 100 places, summarised under one rule and served to a map.</div></div>
+    <div style="display:flex;flex-direction:column;gap:14px;border-top:3px solid rgba(243,240,235,0.55);padding-top:26px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(243,240,235,0.7);">WHAT WE FOUND</div><div style="font-family:Outfit,sans-serif;font-size:36px;font-weight:600;line-height:1.2;">Height tracks temperature; the sample tracks the answer</div><div style="font-size:26px;line-height:1.5;color:rgba(243,240,235,0.85);">r = −0.981 regionally, −0.965 in Sri Lanka, +0.685 across six coastal sites, with weaker rain and wind patterns.</div></div>
+    <div style="display:flex;flex-direction:column;gap:14px;border-top:3px solid rgba(243,240,235,0.55);padding-top:26px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(243,240,235,0.7);">WHY IT MATTERS</div><div style="font-family:Outfit,sans-serif;font-size:36px;font-weight:600;line-height:1.2;">Coverage discipline is what makes a comparison fair</div><div style="font-size:26px;line-height:1.5;color:rgba(243,240,235,0.85);">The results support richer regional exploration — not a universal law about height, and not a claim about climate change.</div></div>
+  </div>
+</section>
+
+<section data-label="Next Steps" data-screen-label="29" data-speaker-notes="Five next steps, each following directly from a limitation we just described." style="background:#F3F0EB;color:#2D3849;font-family:Manrope,sans-serif;padding:88px 96px;display:flex;flex-direction:column;gap:40px;">
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(45,56,73,0.6);">Next steps</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:62px;font-weight:600;letter-spacing:-0.02em;">Five things we would do next</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:22px;flex:1;align-content:center;">
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 28px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">01</div><div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;line-height:1.2;">Deploy the warehouse</div><div style="font-size:25px;line-height:1.45;color:rgba(45,56,73,0.78);">Snowflake roles and schemas, staged loading, dbt models and tests, then compare against the local reference.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 28px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">02</div><div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;line-height:1.2;">Ship on-demand downloads</div><div style="font-size:25px;line-height:1.45;color:rgba(45,56,73,0.78);">Coverage checks, cost estimates, workable alternatives and user-triggered fetches in the dashboard.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 28px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">03</div><div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;line-height:1.2;">Fill in the history</div><div style="font-size:25px;line-height:1.45;color:rgba(45,56,73,0.78);">Complete 2020 onwards for every place, so seasonal and yearly comparisons leave the 119-day window behind.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 28px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">04</div><div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;line-height:1.2;">Use stronger statistics</div><div style="font-size:25px;line-height:1.45;color:rgba(45,56,73,0.78);">Methods that allow for places and times being related, instead of exploratory p-values.</div></div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:34px 28px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(45,56,73,0.55);">05</div><div style="font-family:Outfit,sans-serif;font-size:30px;font-weight:600;line-height:1.2;">Measure and control serving</div><div style="font-size:25px;line-height:1.45;color:rgba(45,56,73,0.78);">Report query, waiting and drawing time separately, with auto-suspend, monitoring and costs from measured loads.</div></div>
+  </div>
+</section>
+
+<section data-label="Thank You" data-screen-label="30" data-speaker-notes="Close on the takeaway and invite questions. Evidence lives in scripts/ and reports/replication/, with the snapshot fingerprint recorded." style="background:#2D3849;color:#F3F0EB;font-family:Manrope,sans-serif;display:grid;grid-template-columns:1.1fr 0.9fr;">
+  <div style="padding:96px;display:flex;flex-direction:column;justify-content:center;gap:36px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(243,240,235,0.7);">Takeaway</div>
+    <h2 style="margin:0;font-family:Outfit,sans-serif;font-size:70px;font-weight:600;line-height:1.12;letter-spacing:-0.02em;">A weather average is only as good as the coverage behind it.</h2>
+    <div style="display:flex;align-items:baseline;gap:40px;padding-top:20px;border-top:1px solid rgba(243,240,235,0.25);">
+      <div style="font-family:Outfit,sans-serif;font-size:54px;font-weight:600;">Thank you</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:30px;color:rgba(243,240,235,0.8);">Questions welcome</div>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;color:rgba(243,240,235,0.62);">Snapshot 88f9c909b05c7590 · scripts/ · reports/replication/</div>
+  </div>
+  <div style="position:relative;background-image:url('assets/hero-mist.jpeg');background-size:cover;background-position:center;">
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg,#2D3849 0%,rgba(45,56,73,0.55) 40%,rgba(45,56,73,0.25) 100%);"></div>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;teamName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Group project&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;courseName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Big Data Analytics&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      teamName: this.props.teamName ?? "Group project",
+      courseName: this.props.courseName ?? "Big Data Analytics",
+    };
+  }
+}
+</script>
+</body>
+</html>

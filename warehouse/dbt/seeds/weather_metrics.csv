@@ -1,0 +1,13 @@
+metric,label,unit,daily_aggregation
+temperature_2m,Temperature,°C,mean
+precipitation,Precipitation,mm/day,sum
+relative_humidity_2m,Relative humidity,%,mean
+wind_speed_10m,Wind speed · 10 m,m/s,mean
+apparent_temperature,Feels-like temperature,°C,mean
+dew_point_2m,Dew point,°C,mean
+cloud_cover,Cloud cover,%,mean
+surface_pressure,Surface pressure,hPa,mean
+soil_temperature_0_to_7cm,Soil temperature · 0–7 cm,°C,mean
+soil_moisture_0_to_7cm,Soil moisture · 0–7 cm,m³/m³,mean
+shortwave_radiation,Shortwave radiation,W/m²,mean
+snow_depth,Snow depth,m,mean

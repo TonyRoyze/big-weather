@@ -1,0 +1,16 @@
+{
+  "years": [
+    2020,
+    2025
+  ],
+  "sites": 6,
+  "comparisons": 504,
+  "permutations": 4999,
+  "block_days": 7,
+  "unit": "daily mean; daily total for precipitation",
+  "leap_day": "excluded for matched calendar-day positions",
+  "multiplicity": "Holm across 12 months x 2 tests separately for each location-feature; not global across all features/sites",
+  "method": "ANOVA level statistic; Brown-Forsythe spread statistic, median-centered residual permutations; year labels shuffled within matched 7-day calendar blocks",
+  "assumptions": "Exchangeability of year blocks under null; approximate temporal dependence treatment; dependencies across block boundaries not retained",
+  "script_sha256": "00781dbda54b521f4ab1d3f143aae4ece7f0cf5aa10825cc3dae3f24f0b36af3"
+}

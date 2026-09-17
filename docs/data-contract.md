@@ -3,10 +3,10 @@
 ## Storage
 
 ```text
-data/raw/locations/locations.parquet
-data/raw/weather/location_id=<id>/year=<yyyy>/weather.parquet
-data/processed/{enriched_weather,daily_metrics,summaries,yearly_metrics,lapse_rates}/
-data/processed/pipeline_metrics.json
+data/regional-2020-2025/raw/locations/locations.parquet
+data/regional-2020-2025/raw/weather/location_id=<id>/year=<yyyy>/weather-<start>-<end>.parquet
+data/regional-2020-2025/processed/{enriched_weather,daily_metrics,summaries,yearly_metrics,lapse_rates}/
+data/regional-2020-2025/processed/pipeline_metrics.json
 data/platform/active.json
 data/platform/releases/<version>/{locations,enriched_weather,daily_metrics,summaries,yearly_metrics,lapse_rates}/
 data/platform/releases/<version>/manifest.json
@@ -15,7 +15,8 @@ data/platform/jobs/<job_id>/{request.json,metadata.json,worker.log,worker_metric
 data/platform/evidence/<version>/{*.parquet,metadata.json,findings.md}
 ```
 
-Cached requests live separately in `data/cache`. Publication copies completed
+The shared quota ledger lives in `data/cache`; source metadata and download checkpoints
+live beside regional raw data. Publication copies completed
 Parquet outputs into a staging directory, checks required columns and unique keys,
 hashes files, renames the release and atomically switches the active pointer. A
 failed validation leaves the previous release active. Published files are immutable
@@ -27,7 +28,7 @@ manually. Readers keep a single version for each page or job.
 | Table | Grain / key | Fields used by the team |
 | --- | --- | --- |
 | locations | One row per `location_id` | `name`, `country`, `region`, `latitude`, `longitude`, `elevation_m` |
-| enriched_weather | `location_id`, `timestamp` | Hourly temperature, precipitation, wind and humidity; location metadata; `date`, `year`, `season`, `elevation_band` |
+| enriched_weather | `location_id`, `timestamp` | All 47 hourly fields in the regional profile; location metadata; `date`, `year`, `season`, `elevation_band` |
 | daily_metrics | `location_id`, `date` | Daily mean temperature/wind, daily precipitation total, rolling 30-calendar-day temperature mean, `observed_hours` (new processing runs) |
 | summaries | `elevation_band`, `region`, `season`, `year` | Pooled hourly means; pooled precipitation sum; `observation_count` |
 | yearly_metrics | `location_id`, `year` | Annual hourly temperature mean and difference from preceding available annual row |
@@ -51,7 +52,9 @@ joins locations, records counts before/after validation and joining, and reports
 actual input/shuffle partitions. Rejection counts combine invalid rows and duplicates;
 they are not a per-reason audit. Publication records per-location hourly coverage
 against the global observed study window; inspect gaps before making comparisons.
-A complete 2019–2024 release has 52,608 hours per location and 1,893,888 total hours.
+Legacy yearly `weather.parquet` checkpoints remain supported alongside dated weekly
+files. The saved study plan defines the exact requested coverage. As a reference,
+a complete 2020–2025 release has 52,608 hours per location and 5,260,800 total rows.
 
 Daily means use retained hours. `observed_hours < 24` signals incomplete daily
 coverage; neither daily totals nor window calculations impute missing observations.

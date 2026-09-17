@@ -148,3 +148,26 @@ def test_lapse_rate_known_line_and_empty_model_schema(spark):
         "rmse_c",
         "sample_size",
     ]
+
+
+def test_notebook_windows_and_purged_chronological_split(spark):
+    from weather_analysis.notebook import chronological_split, past_average
+
+    # Deliberately shuffled; two locations and a missing hour. A 2-hour window
+    # must not use a previous row from 3 hours ago, the current row or another site.
+    frame = spark.createDataFrame([
+        ('a', datetime(2024, 1, 1, 4, tzinfo=timezone.utc), 40.),
+        ('b', datetime(2024, 1, 1, 1, tzinfo=timezone.utc), 100.),
+        ('a', datetime(2024, 1, 1, 0, tzinfo=timezone.utc), 10.),
+        ('a', datetime(2024, 1, 1, 1, tzinfo=timezone.utc), 20.),
+        ('a', datetime(2024, 1, 1, 5, tzinfo=timezone.utc), 50.),
+    ], 'location_id string, timestamp timestamp, value double').repartition(3)
+    result = past_average(frame, 'value', hours=2).orderBy('location_id', 'timestamp').collect()
+    assert [r.value_past_2h for r in result] == [None, 10., None, 40., None]
+    train, valid, test = chronological_split(
+        frame, '2024-01-01T04:00Z', '2024-01-01T05:00Z', horizon_hours=1)
+    assert train.count() == 3
+    assert valid.count() == 0  # 04:00 label at 05:00 crosses the test boundary
+    assert test.count() == 1
+    with pytest.raises(ValueError, match='ordered cutoffs'):
+        chronological_split(frame, '2025-01-01', '2024-01-01')

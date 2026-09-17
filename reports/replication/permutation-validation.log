@@ -1,0 +1,9 @@
+    feature  built_in  permutation_r2_drop  permutation_std
+elevation_m  0.757103             1.581986         0.012482
+   latitude  0.101409             0.039507         0.000760
+  longitude  0.032876             0.038707         0.001621
+  month_sin  0.016360             0.000000         0.000000
+  month_cos  0.001604             0.000000         0.000000
+   hour_sin  0.061285             0.135056         0.001891
+   hour_cos  0.029363             0.060038         0.001850
+       year  0.000000             0.000000         0.000000

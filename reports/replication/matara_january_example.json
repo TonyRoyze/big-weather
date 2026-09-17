@@ -1,0 +1,7 @@
+{
+  "2020_mean": 27.293413978494627,
+  "2021_mean": 26.01290322580645,
+  "2020_sd": 0.5441223971629773,
+  "2021_sd": 0.4310736419302686,
+  "interpretation": "Exact matched-block exchanges; 7-day primary has only 32 assignments and low power; 3-day sensitivity uses 2048 assignments"
+}

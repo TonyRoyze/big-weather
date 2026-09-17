@@ -23,12 +23,11 @@ def package_root(tmp_path):
         "pyproject.toml",
         ".gitignore",
         ".env.example",
-        "scripts/benchmark.py",
         "scripts/check_setup.py",
         "scripts/team-launch.sh",
         "python/src/example.py",
         "docs/test.md",
-        "config/locations.csv",
+        "config/locations_regional_100.csv",
     ]:
         file = root / name
         file.parent.mkdir(parents=True, exist_ok=True)
@@ -75,3 +74,12 @@ def test_corrupt_release_is_rejected(package_root, published, tmp_path):
         handle.write(b"corrupt")
     with pytest.raises(ValueError, match="checksum mismatch"):
         builder.write_payload(package_root, store, tmp_path / "payload.tar.gz")
+
+
+def test_setup_without_published_data(package_root, tmp_path):
+    output = tmp_path / "setup.tar.gz"
+    metadata = builder.write_payload(package_root, tmp_path / "missing", output)
+    assert metadata["dataset_version"] is None
+    with tarfile.open(output) as archive:
+        assert "config/locations_regional_100.csv" in archive.getnames()
+        assert not any(n.startswith("data/platform/") for n in archive.getnames())

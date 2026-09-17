@@ -1,0 +1,16 @@
+big_weather:
+  target: "{{ env_var('DBT_TARGET', 'dev') }}"
+  outputs:
+    dev:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT', 'offline') }}"
+      user: "{{ env_var('SNOWFLAKE_USER', 'offline') }}"
+      authenticator: externalbrowser
+      role: "{{ env_var('SNOWFLAKE_ROLE', 'WEATHER_TRANSFORMER') }}"
+      database: "{{ env_var('SNOWFLAKE_DATABASE', 'BIG_WEATHER_DEV') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE', 'WEATHER_TRANSFORM_WH') }}"
+      schema: "{{ env_var('DBT_SCHEMA', 'WEATHER_DEV') }}"
+      threads: 4
+      session_parameters:
+        TIMEZONE: UTC
+        QUERY_TAG: big_weather_dbt

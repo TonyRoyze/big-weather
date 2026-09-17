@@ -107,6 +107,11 @@ def publish(data_root: Path, store_root: Path, version: str) -> dict:
     Run only after ingestion/processing finish. Existing versions are never replaced.
     Hash every copied Parquet file so manifests identify actual data, not just labels.
     """
+    study_plan = data_root / "study-plan.json"
+    if study_plan.exists():
+        state = json.loads((data_root / "ingestion-status.json").read_text())
+        if state["status"] != "complete":
+            raise ValueError("Regional ingestion is incomplete")
     identifier(version)
     releases = store_root / "releases"
     releases.mkdir(parents=True, exist_ok=True)
@@ -178,6 +183,19 @@ def publish(data_root: Path, store_root: Path, version: str) -> dict:
                 "coverage_by_location": coverage_by_location,
             },
         }
+        if study_plan.exists():
+            plan = json.loads(study_plan.read_text())
+            if len(weather) != plan["expected_rows"] or set(locations.location_id) != {
+                loc["location_id"] for loc in plan["locations"]
+            }:
+                raise ValueError("Processed data does not cover the complete regional study")
+            if any(c["missing_hours_in_study_window"] for c in coverage_by_location):
+                raise ValueError("Regional study has missing hourly observations")
+            manifest["study"] = plan
+            manifest["attribution"] += " Regional model: ERA5-Seamless (ERA5 + ERA5-Land)."
+            shutil.copytree(data_root / "raw/weather", stage / "source_metadata",
+                            ignore=lambda path, names: [n for n in names if not (n.startswith("_source") and n.endswith(".json"))
+                                and not (Path(path) / n).is_dir()])
         metrics = data_root / "processed/pipeline_metrics.json"
         if metrics.exists():
             manifest["pipeline"] = json.loads(metrics.read_text())

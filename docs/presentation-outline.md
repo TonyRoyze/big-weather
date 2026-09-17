@@ -6,7 +6,7 @@ Use 8–10 slides, adapting duration to the assessment instructions.
 | Slide | Message | Evidence / visual | Owner action |
 | --- | --- | --- | --- |
 | 1. Research question | How do weather patterns vary with elevation and geography? | Selected-location map | State team scope |
-| 2. Data | 36 locations; 2019–2024 ERA5 hourly observations | Coverage/quality counts from manifest | Explain units and attribution |
+| 2. Data | 100 locations; 2020–2025 ERA5-Seamless hourly estimates | Coverage/quality counts from manifest | Explain units and attribution |
 | 3. Architecture | Reproducible extraction → Spark → published results → dashboard | Architecture diagram | Distinguish local threads from cluster nodes |
 | 4. Quality and methods | Comparisons depend on coverage and weighting | Validation counts + one aggregation example | Explain rainfall denominator and seasons |
 | 5. Temperature finding | Insert one quantified, qualified finding | Elevation scatter and/or seasonal signed slopes | Cite version, sample size, confounding |

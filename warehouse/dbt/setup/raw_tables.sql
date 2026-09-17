@@ -1,0 +1,62 @@
+-- Run in the chosen DEV database as an appropriately privileged role.
+-- Never replaces existing source data. The loader supplies complete committed files only.
+create schema if not exists RAW;
+create table if not exists RAW.LOCATIONS (
+ location_id varchar not null, name varchar not null, country varchar not null,
+ region varchar, latitude float not null, longitude float not null, elevation_m float not null
+);
+create table if not exists RAW.WEATHER_HOURLY (
+ location_id varchar not null,
+ observed_at timestamp_ntz not null, -- UTC; map source timestamp explicitly
+ temperature_2m float,
+ relative_humidity_2m float,
+ dew_point_2m float,
+ apparent_temperature float,
+ precipitation float,
+ rain float,
+ snowfall float,
+ snow_depth float,
+ weather_code float,
+ pressure_msl float,
+ surface_pressure float,
+ cloud_cover float,
+ cloud_cover_low float,
+ cloud_cover_mid float,
+ cloud_cover_high float,
+ et0_fao_evapotranspiration float,
+ vapour_pressure_deficit float,
+ wind_speed_10m float,
+ wind_speed_100m float,
+ wind_direction_10m float,
+ wind_direction_100m float,
+ wind_gusts_10m float,
+ soil_temperature_0_to_7cm float,
+ soil_temperature_7_to_28cm float,
+ soil_temperature_28_to_100cm float,
+ soil_temperature_100_to_255cm float,
+ soil_moisture_0_to_7cm float,
+ soil_moisture_7_to_28cm float,
+ soil_moisture_28_to_100cm float,
+ soil_moisture_100_to_255cm float,
+ boundary_layer_height float,
+ wet_bulb_temperature_2m float,
+ total_column_integrated_water_vapour float,
+ is_day float,
+ sunshine_duration float,
+ shortwave_radiation float,
+ direct_radiation float,
+ diffuse_radiation float,
+ direct_normal_irradiance float,
+ global_tilted_irradiance float,
+ terrestrial_radiation float,
+ shortwave_radiation_instant float,
+ direct_radiation_instant float,
+ diffuse_radiation_instant float,
+ direct_normal_irradiance_instant float,
+ global_tilted_irradiance_instant float,
+ terrestrial_radiation_instant float,
+ loaded_at timestamp_ntz not null, -- UTC warehouse load time, not weather observation time
+ source_file varchar not null,
+ source_row_number number not null,
+ source_checksum varchar not null
+);

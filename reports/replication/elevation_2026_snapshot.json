@@ -1,0 +1,10 @@
+{
+  "start": "2026-01-01",
+  "end": "2026-08-31",
+  "hourly_rows": 583200,
+  "site_months": 800,
+  "sites": 100,
+  "source_files": 3500,
+  "source_fingerprint": "6fd2ae83ac5ff510c900e0a9f7885c4181c178b956b0eb665b81caee364c27ea",
+  "metadata_sha256": "c40b60527ba9891d92053902e4d25a4ec782605b5f1174f6524c4c5f403ab7e8"
+}

@@ -1,0 +1,11 @@
+variant,fold,test_countries,train_sites,test_sites,mae_m
+All weather features,1,LK,70,30,41.899869625744635
+All weather features,2,IN,80,20,85.1197095700706
+All weather features,3,"BD,ID,NP",83,17,102.29778891331826
+All weather features,4,"BT,MY,SG,TH",84,16,61.83986829872943
+All weather features,5,"KH,LA,MM,VN",83,17,36.68213967744563
+Without surface pressure,1,LK,70,30,134.40379754450345
+Without surface pressure,2,IN,80,20,182.4968985487714
+Without surface pressure,3,"BD,ID,NP",83,17,157.87508658192132
+Without surface pressure,4,"BT,MY,SG,TH",84,16,152.31859436097875
+Without surface pressure,5,"KH,LA,MM,VN",83,17,111.78910893573023
