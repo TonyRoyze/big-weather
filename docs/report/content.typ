@@ -480,7 +480,7 @@ must not turn descriptive associations into causal claims.
 
 == Local Prototype
 
-Install the Python environment and frontend dependencies before starting the explorer.
+Install the Python environment and frontend dependencies before starting the #link("https://github.com/TonyRoyze/big-weather")[*explorer*].
 Spark-based analysis requires a compatible Java installation. The raw explorer is served at `http://127.0.0.1:8001`. The main commands are,
 
 ```bash

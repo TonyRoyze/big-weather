@@ -2,12 +2,12 @@
 
 ## Separate 3D dashboard
 
-The React + deck.gl **Elevation Explorer** runs alongside the Streamlit dashboard.
-It includes terrain, weather colours, date playback, location history and cached
-on-demand queries. Run `make install-explorer`, then `make explorer` and open
+The React + deck.gl **Elevation Explorer** is the project dashboard. It includes
+terrain, weather colours, date playback, location history and cached on-demand
+queries. Run `make install-explorer`, then `make explorer` and open
 http://127.0.0.1:8001. For the existing partial download, use `make explorer-raw`
-(clearly labelled unpublished preview). Streamlit remains `make dashboard`.
-See [setup, controls and data semantics](docs/elevation-explorer.md).
+(clearly labelled unpublished preview). See [dashboard setup, controls and data
+semantics](docs/elevation-explorer.md).
 
 A Python/PySpark project exploring 100 locations across Sri Lanka and nearby South
 and Southeast Asia, with 47 historical hourly variables. Ingestion fills the newest
@@ -29,17 +29,32 @@ make ingest-all     # one designated machine; resumable and quota-aware
 make process        # requires the full download
 make publish
 make evidence
-make notebook       # interactive exploration
-make notebook-altair # Spark ingestion + interactive Altair starter
-make notebook-relationships # themed 17-variable Spark relationships
-make dashboard
+make install-explorer
+make explorer       # React dashboard + FastAPI service
 ```
 
-Use `make start-local` to start the Streamlit dashboard, optional 3D explorer and
-Marimo notebook server together. Use `make stop-local` to stop only the project
-services on ports 8501, 8001 and 2718. Logs are kept in `.local-services/`.
+For dashboard development, start the FastAPI service in one terminal:
 
-Until publication, the dashboard and exploration notebook show setup instructions.
+```bash
+.venv/bin/python -m weather_analysis.explorer \
+  --raw-root data/regional-2020-2025 --port 8001
+```
+
+Then start the React/Vite development server in another terminal:
+
+```bash
+make explorer-dev
+```
+
+Open http://127.0.0.1:5173. The Vite server proxies API requests to FastAPI on
+port 8001. Stop both development processes with `Ctrl+C`.
+
+For the built dashboard served directly by FastAPI, use `make explorer`. Use
+`make explorer-raw` when no published release exists; the interface labels this
+as an unpublished preview. `make start-local` and `make stop-local` are available
+for starting or stopping the project's managed local services.
+
+Until publication, the dashboard shows setup instructions.
 Do not start another ingestion worker if one is already running. Regional data and
 checkpoints live in `data/regional-2020-2025`; the quota ledger lives in `data/cache`.
 Tests use small synthetic fixtures and do not need the full download.
@@ -53,20 +68,14 @@ the loaded dates. Click Load charts again to fetch another range. Large ranges u
 labeled calendar buckets with mean daily values, including rainfall, and at most
 6,000 plotted rows per chart. The displayed query time excludes chart rendering.
 
-For plain Python analysis, copy `notebooks/spark_patterns.py`, import `spark_setup`,
-and run it from `notebooks/`. Spark starts automatically and loads a published release.
-Spark DataFrame operations run in parallel; temporal helpers use ordered per-location
-windows and chronological evaluation splits. Only collect small summaries for plotting.
-
 ## Code map
 
 | Path | Purpose |
 |---|---|
 | `config/locations_regional_100.csv` | Fixed sampling coordinates |
 | `python/src/weather_ingest/` | Regional import, checkpoints, quota budget, variable profile |
-| `python/src/weather_analysis/` | PySpark transforms, notebook runtime, publication, jobs and evidence |
-| `notebooks/` | Interactive exploration and plain Python examples |
-| `dashboard/app.py` | Streamlit dashboard starter |
+| `python/src/weather_analysis/` | PySpark transforms, publication, jobs, FastAPI service and evidence |
+| `explorer/` | React/deck.gl dashboard and Vite frontend |
 | `python/tests/` | Ingestion, temporal analysis, publication, dashboard and packaging checks |
 | `installer/windows/`, `scripts/` | Team setup and verification |
 
@@ -79,7 +88,6 @@ make windows-setup
 ## Team deliverables
 
 - [Regional study and download details](docs/regional-study.md)
-- [Notebook workflow and temporal analysis](docs/notebook-workflow.md)
 - [Data contract](docs/data-contract.md)
 - [Team handoff and deployment](docs/team-handoff.md)
 - [Windows setup](docs/windows-setup.md)
@@ -89,7 +97,7 @@ make windows-setup
 Keep findings tied to the dataset version, filters, units and evidence table or job ID.
 Account for spatial grid sharing, elevation downscaling and non-random site selection.
 
-The explorer also includes **Ask weather**, a plain-English analysis page powered
+The dashboard also includes **Ask weather**, a plain-English analysis page powered
 by OpenAI and local Spark. See [setup and supported analyses](docs/ask-weather.md).
 
 The [Snowflake/dbt implementation package](warehouse/dbt/README.md) contains RAW table

@@ -33,5 +33,7 @@
   first-line-indent: 0pt,
   spacing: 2em,
 )
+#show link: underline
+#show link: set text(fill: blue)
 #set figure.caption(position: bottom)
 #include "content.typ"
